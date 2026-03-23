@@ -652,7 +652,7 @@
     }
     function updatePlayer(p, idx) {
       if (!p.alive) return;
-      const spd = p.speedBoost > 0 ? 3 : 6;
+      const spd = p.speedBoost > 0 ? 2 : 4;
       if (frameCount % spd !== 0) return;
       if (p.speedBoost > 0) p.speedBoost--;
       const nx = p.x + p.dx, ny = p.y + p.dy;
