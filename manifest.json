@@ -1,0 +1,27 @@
+{
+    "name": "TRON Light Cycle Battle",
+    "short_name": "TRON",
+    "description": "2-player Tron light cycle battle game",
+    "start_url": "/",
+    "display": "fullscreen",
+    "orientation": "landscape",
+    "background_color": "#000d1f",
+    "theme_color": "#000d1f",
+    "categories": [
+        "games"
+    ],
+    "icons": [
+        {
+            "src": "/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
