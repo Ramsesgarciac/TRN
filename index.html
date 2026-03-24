@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <title>TRON · Light Cycle Battle</title>
+  <title>TRON:MOBILE · Light Cycle Battle</title>
 
   <!-- PWA -->
   <link rel="manifest" href="/manifest.json">
@@ -733,7 +733,7 @@
     function updatePlayer(p, idx) {
       if (!p.alive) return;
       // ── Velocidad: 3 frames normal, 1 frame con boost ──
-      const spd = p.speedBoost > 0 ? 1 : 3;
+      const spd = p.speedBoost > 0 ? 2 : 4;
       if (frameCount % spd !== 0) return;
       if (p.speedBoost > 0) p.speedBoost--;
       const nx = p.x + p.dx, ny = p.y + p.dy;
