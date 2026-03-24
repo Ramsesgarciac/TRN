@@ -32,7 +32,6 @@
       left: 0;
     }
 
-    /* ── SPLASH ── */
     #splash {
       position: fixed;
       inset: 0;
@@ -99,7 +98,6 @@
       background: rgba(0, 180, 255, 0.15);
       border-radius: 2px;
       overflow: hidden;
-      position: relative;
     }
 
     .splash-bar {
@@ -124,7 +122,6 @@
       position: relative;
     }
 
-    /* ── HUD ── */
     #hud {
       position: fixed;
       top: 0;
@@ -184,7 +181,6 @@
       margin-top: 1px;
     }
 
-    /* ── DPADS ── */
     .dpad {
       position: fixed;
       display: grid;
@@ -229,7 +225,6 @@
       pointer-events: none;
     }
 
-    /* dpad derecho bloqueado en single player */
     #dpad2.locked .btn:not(.empty) {
       background: rgba(0, 180, 255, 0.04);
       border-color: rgba(0, 180, 255, 0.1);
@@ -237,7 +232,6 @@
       pointer-events: none;
     }
 
-    /* ── OVERLAY GENERAL ── */
     #overlay {
       position: fixed;
       inset: 0;
@@ -305,7 +299,6 @@
       margin: 4px 0;
     }
 
-    /* ── MENÚ DE MODOS ── */
     #menu-screen {
       display: none;
       flex-direction: column;
@@ -329,7 +322,6 @@
       margin: 2px 0;
     }
 
-    /* tarjetas de modo */
     .mode-card {
       display: flex;
       align-items: center;
@@ -404,7 +396,6 @@
       border: 1px solid rgba(0, 255, 130, 0.3);
     }
 
-    /* botones del menú */
     .ov-btn {
       background: transparent;
       border: 1px solid rgba(0, 200, 255, 0.5);
@@ -432,14 +423,8 @@
 
     .ov-btn.primary:hover {
       background: rgba(255, 220, 0, 0.1);
-      border-color: #ffe050;
     }
 
-    #ov-btn-legacy {
-      display: block;
-    }
-
-    /* ── INSTALL BANNER ── */
     #install-banner {
       position: fixed;
       bottom: 20px;
@@ -490,7 +475,6 @@
 
 <body>
 
-  <!-- SPLASH -->
   <div id="splash">
     <div class="splash-grid"><canvas id="sgc"></canvas></div>
     <div class="splash-logo">TRON</div>
@@ -516,7 +500,6 @@
     <div class="hud-block"><span class="hud-label">2ND</span><span class="hud-val" id="h2v">0000</span></div>
   </div>
 
-  <!-- DPAD P1 -->
   <div class="dpad" id="dpad1">
     <div class="btn empty"></div>
     <div class="btn" id="p1up">▲</div>
@@ -528,8 +511,6 @@
     <div class="btn" id="p1down">▼</div>
     <div class="btn empty"></div>
   </div>
-
-  <!-- DPAD P2 -->
   <div class="dpad" id="dpad2">
     <div class="btn empty"></div>
     <div class="btn" id="p2up">▲</div>
@@ -548,44 +529,34 @@
     <button id="dismiss-btn">✕</button>
   </div>
 
-  <!-- OVERLAY PRINCIPAL -->
   <div id="overlay">
     <div class="ov-border">
       <div id="ov-title">TRON</div>
       <div id="ov-sub">LIGHT CYCLE BATTLE · 2 PLAYERS</div>
       <div id="ov-winner" style="display:none;"></div>
-
-      <!-- Pantalla INSERT COIN -->
       <div id="coin-screen">
         <button class="ov-btn primary" onclick="showMenu()">INSERT COIN</button>
       </div>
-
-      <!-- Pantalla MENÚ DE MODOS -->
       <div id="menu-screen">
-
         <span class="menu-section-title">— MODO DE JUEGO —</span>
-
         <div class="mode-card selected" id="card-classic" onclick="selectMode('classic')">
           <div class="mode-icon"></div>
           <div class="mode-info">
             <div class="mode-name">CLASSIC</div>
-            <div class="mode-desc">Estela de longitud variable · Power-ups · Boost</div>
+            <div class="mode-desc">Estela variable · Power-ups · Boost</div>
           </div>
           <div class="mode-tag tag-classic">CLASSIC</div>
         </div>
-
         <div class="mode-card" id="card-infinite" onclick="selectMode('infinite')">
           <div class="mode-icon"></div>
           <div class="mode-info">
             <div class="mode-name">INFINITE TRAIL</div>
-            <div class="mode-desc">Estela permanente desde el inicio · Sin power-ups</div>
+            <div class="mode-desc">Estela permanente · Sin power-ups</div>
           </div>
           <div class="mode-tag tag-infinite">NEW</div>
         </div>
-
         <div class="menu-divider"></div>
         <span class="menu-section-title">— JUGADORES —</span>
-
         <div style="display:flex;gap:10px;width:100%;">
           <div class="mode-card selected" id="card-2p" onclick="selectPlayers(2)"
             style="flex:1;justify-content:center;">
@@ -601,21 +572,19 @@
             </div>
           </div>
         </div>
-
         <div class="menu-divider"></div>
         <button class="ov-btn primary" onclick="startGame()">ARRANCAR</button>
         <button class="ov-btn" onclick="showCoin()" style="font-size:9px;padding:6px;opacity:0.5;">← VOLVER</button>
       </div>
-
     </div>
   </div>
 
+  <audio id="bgm" preload="auto" style="display:none;"></audio>
+
   <script>
-    // ── SERVICE WORKER ──────────────────────────────────────────────────────────
     if ('serviceWorker' in navigator)
       window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => { }));
 
-    // ── INSTALL PROMPT ──────────────────────────────────────────────────────────
     let deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', e => {
       e.preventDefault(); deferredPrompt = e;
@@ -628,7 +597,6 @@
     });
     document.getElementById('dismiss-btn').addEventListener('click', () => document.getElementById('install-banner').style.display = 'none');
 
-    // ── SPLASH ──────────────────────────────────────────────────────────────────
     (function () {
       const sgc = document.getElementById('sgc'), sc = sgc.getContext('2d');
       sgc.width = window.innerWidth; sgc.height = window.innerHeight;
@@ -641,7 +609,6 @@
     const msgTimer = setInterval(() => { mi++; if (mi < msgs.length) statusEl.textContent = msgs[mi]; else clearInterval(msgTimer); }, 450);
     setTimeout(() => { const s = document.getElementById('splash'); s.classList.add('hide'); setTimeout(() => s.style.display = 'none', 650); }, 1900);
 
-    // ── SOUND FX ────────────────────────────────────────────────────────────────
     let sfxCtx = null;
     function getSfx() { if (!sfxCtx) sfxCtx = new (window.AudioContext || window.webkitAudioContext)(); return sfxCtx; }
     function sfxEngine(idx) { const a = getSfx(), now = a.currentTime, osc = a.createOscillator(), g = a.createGain(); osc.type = 'square'; osc.frequency.value = idx === 0 ? 440 : 290; g.gain.setValueAtTime(0.06, now); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.045); osc.connect(g); g.connect(a.destination); osc.start(now); osc.stop(now + 0.05); }
@@ -651,377 +618,73 @@
     function sfxWin() { const a = getSfx(), now = a.currentTime;[523, 659, 784, 1047].forEach((f, i) => { const osc = a.createOscillator(), g = a.createGain(), t = now + i * 0.14; osc.type = 'square'; osc.frequency.value = f; g.gain.setValueAtTime(0.17, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.24); osc.connect(g); g.connect(a.destination); osc.start(t); osc.stop(t + 0.27); }); }
     function sfxMenuClick() { const a = getSfx(), now = a.currentTime, osc = a.createOscillator(), g = a.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(400, now); osc.frequency.exponentialRampToValueAtTime(600, now + 0.06); g.gain.setValueAtTime(0.1, now); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.08); osc.connect(g); g.connect(a.destination); osc.start(now); osc.stop(now + 0.09); }
 
-    // ── ESTADO DEL MENÚ ──────────────────────────────────────────────────────────
-    let selectedMode = 'classic';   // 'classic' | 'infinite'
-    let selectedPlayers = 2;        // 1 | 2
+    let selectedMode = 'classic', selectedPlayers = 2;
+    function selectMode(mode) { getSfx(); sfxMenuClick(); selectedMode = mode; document.getElementById('card-classic').classList.toggle('selected', mode === 'classic'); document.getElementById('card-infinite').classList.toggle('selected', mode === 'infinite'); }
+    function selectPlayers(n) { getSfx(); sfxMenuClick(); selectedPlayers = n; document.getElementById('card-1p').classList.toggle('selected', n === 1); document.getElementById('card-2p').classList.toggle('selected', n === 2); }
+    function showMenu() { getSfx(); document.getElementById('coin-screen').style.display = 'none'; document.getElementById('menu-screen').style.display = 'flex'; document.getElementById('ov-winner').style.display = 'none'; if (bgm && bgm.paused) playMusic(); }
+    function showCoin() { document.getElementById('coin-screen').style.display = 'block'; document.getElementById('menu-screen').style.display = 'none'; }
 
-    function selectMode(mode) {
-      getSfx(); sfxMenuClick();
-      selectedMode = mode;
-      document.getElementById('card-classic').classList.toggle('selected', mode === 'classic');
-      document.getElementById('card-infinite').classList.toggle('selected', mode === 'infinite');
-    }
-    function selectPlayers(n) {
-      getSfx(); sfxMenuClick();
-      selectedPlayers = n;
-      document.getElementById('card-1p').classList.toggle('selected', n === 1);
-      document.getElementById('card-2p').classList.toggle('selected', n === 2);
-    }
-    function showMenu() {
-      getSfx();
-      document.getElementById('coin-screen').style.display = 'none';
-      document.getElementById('menu-screen').style.display = 'flex';
-      document.getElementById('ov-winner').style.display = 'none';
-    }
-    function showCoin() {
-      document.getElementById('coin-screen').style.display = 'block';
-      document.getElementById('menu-screen').style.display = 'none';
-    }
-
-    // ── GAME ENGINE ──────────────────────────────────────────────────────────────
     const canvas = document.getElementById('c'), ctx = canvas.getContext('2d');
     let W, H, COLS, ROWS, CELL, OFFSET_Y;
     const HEADER = 32, DPAD_W = 175;
-
-    function resize() {
-      W = window.innerWidth; H = window.innerHeight;
-      canvas.width = W; canvas.height = H;
-      const availW = W - DPAD_W * 2, availH = H - HEADER;
-      CELL = Math.floor(Math.min(availW, availH) / 36);
-      COLS = Math.floor(availW / CELL);
-      ROWS = Math.floor(availH / CELL);
-      OFFSET_Y = HEADER + Math.floor((availH - ROWS * CELL) / 2);
-    }
+    function resize() { W = window.innerWidth; H = window.innerHeight; canvas.width = W; canvas.height = H; const availW = W - DPAD_W * 2, availH = H - HEADER; CELL = Math.floor(Math.min(availW, availH) / 36); COLS = Math.floor(availW / CELL); ROWS = Math.floor(availH / CELL); OFFSET_Y = HEADER + Math.floor((availH - ROWS * CELL) / 2); }
     resize();
     window.addEventListener('resize', () => { resize(); if (!running) drawBg(); });
 
     let running = false, gameLoop = null, grid = [], players = [], powerUps = [], frameCount = 0, hiscore = 0;
-    let engineTick = [0, 0];
-    let currentMode = 'classic', currentPlayers = 2;
+    let engineTick = [0, 0], currentMode = 'classic', currentPlayers = 2;
     const PU_RADIUS = 3;
-    const PC = [{ main: '#ffe050', glow: '#ffcc00', dark: '#665500' }, { main: '#00d4ff', glow: '#00aaff', dark: '#004466' }];
+
+    // Colores: 2P = amarillo vs azul | VS CPU = azul(tú) vs naranja(CPU)
+    const PC_2P = [
+      { main: '#ffe050', glow: '#ffcc00', dark: '#665500' },
+      { main: '#00d4ff', glow: '#00aaff', dark: '#004466' }
+    ];
+    const PC_CPU = [
+      { main: '#00d4ff', glow: '#00aaff', dark: '#004466' },
+      { main: '#ff6a00', glow: '#ff4400', dark: '#662200' }
+    ];
+    let PC = PC_2P;
 
     function initGrid() { grid = Array.from({ length: ROWS }, () => new Array(COLS).fill(0)); }
-
-    function createPlayers() {
-      const mg = Math.floor(COLS / 5);
-      players = [
-        { x: mg, y: Math.floor(ROWS / 2), dx: 1, dy: 0, trail: [], trailLength: currentMode === 'infinite' ? 9999 : 5, speedBoost: 0, alive: true, wins: 0, score: 0, isAI: false },
-        { x: COLS - mg - 1, y: Math.floor(ROWS / 2), dx: -1, dy: 0, trail: [], trailLength: currentMode === 'infinite' ? 9999 : 5, speedBoost: 0, alive: true, wins: 0, score: 0, isAI: currentPlayers === 1 }
-      ];
-      // En modo infinite, marcar toda la trail en el grid inmediatamente no aplica — se irá marcando al moverse
-    }
-
-    function spawnPowerUp() {
-      const types = ['trail', 'trail', 'speed'];
-      const type = types[Math.floor(Math.random() * types.length)];
-      let px, py, att = 0;
-      do { px = 4 + Math.floor(Math.random() * (COLS - 8)); py = 4 + Math.floor(Math.random() * (ROWS - 8)); att++; }
-      while (grid[py][px] !== 0 && att < 40);
-      if (att < 40) powerUps.push({ x: px, y: py, type, born: frameCount });
-    }
-
+    function createPlayers() { const mg = Math.floor(COLS / 5); players = [{ x: mg, y: Math.floor(ROWS / 2), dx: 1, dy: 0, trail: [], trailLength: currentMode === 'infinite' ? 9999 : 5, speedBoost: 0, alive: true, wins: 0, score: 0, isAI: false }, { x: COLS - mg - 1, y: Math.floor(ROWS / 2), dx: -1, dy: 0, trail: [], trailLength: currentMode === 'infinite' ? 9999 : 5, speedBoost: 0, alive: true, wins: 0, score: 0, isAI: currentPlayers === 1 }]; }
+    function spawnPowerUp() { const types = ['trail', 'trail', 'speed']; const type = types[Math.floor(Math.random() * types.length)]; let px, py, att = 0; do { px = 4 + Math.floor(Math.random() * (COLS - 8)); py = 4 + Math.floor(Math.random() * (ROWS - 8)); att++; } while (grid[py][px] !== 0 && att < 40); if (att < 40) powerUps.push({ x: px, y: py, type, born: frameCount }); }
     function arenaX() { return DPAD_W + Math.floor((W - DPAD_W * 2 - COLS * CELL) / 2); }
 
-    // ── IA ────────────────────────────────────────────────────────────────────────
-    // La IA usa lookahead: evalúa las 3 opciones (recto, izq, der) y elige la que
-    // deja más espacio libre por flood-fill, con algo de azar para no ser perfecta.
-    function aiMove(p, opponent) {
-      const directions = [
-        { dx: p.dx, dy: p.dy },                  // recto
-        { dx: -p.dy, dy: p.dx },                 // girar izquierda
-        { dx: p.dy, dy: -p.dx }                  // girar derecha
-      ];
+    function aiMove(p, opponent) { const directions = [{ dx: p.dx, dy: p.dy }, { dx: -p.dy, dy: p.dx }, { dx: p.dy, dy: -p.dx }]; let bestScore = -1, bestDir = directions[0]; for (const d of directions) { const nx = p.x + d.dx, ny = p.y + d.dy; if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS) continue; if (grid[ny][nx] !== 0) continue; const space = floodFill(nx, ny, 18); const distOpp = Math.abs(nx - opponent.x) + Math.abs(ny - opponent.y); const oppPenalty = distOpp < 4 ? -8 : 0; const noise = (Math.random() - 0.5) * 6; const score = space + oppPenalty + noise; if (score > bestScore) { bestScore = score; bestDir = d; } } if (bestDir.dx !== 0 && p.dx !== 0) return; if (bestDir.dy !== 0 && p.dy !== 0) return; p.dx = bestDir.dx; p.dy = bestDir.dy; }
+    function floodFill(sx, sy, maxDepth) { let count = 0; const stack = [{ x: sx, y: sy, d: 0 }], visited = new Set(); visited.add(sx + ',' + sy); while (stack.length && count < maxDepth * maxDepth) { const { x, y, d } = stack.pop(); count++; if (d >= maxDepth) continue; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const nx = x + dx, ny = y + dy; if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS) continue; if (grid[ny][nx] !== 0) continue; const k = nx + ',' + ny; if (visited.has(k)) continue; visited.add(k); stack.push({ x: nx, y: ny, d: d + 1 }); } } return count; }
 
-      let bestScore = -1, bestDir = directions[0];
-
-      for (const d of directions) {
-        const nx = p.x + d.dx, ny = p.y + d.dy;
-        // descartar colisión inmediata
-        if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS) { continue; }
-        if (grid[ny][nx] !== 0) { continue; }
-
-        // flood fill limitado para evaluar espacio (profundidad 18)
-        const space = floodFill(nx, ny, 18);
-        // penalizar si nos acercamos demasiado al oponente
-        const distOpp = Math.abs(nx - opponent.x) + Math.abs(ny - opponent.y);
-        const oppPenalty = distOpp < 4 ? -8 : 0;
-        // pequeño azar (±3) para que no sea perfecta
-        const noise = (Math.random() - 0.5) * 6;
-        const score = space + oppPenalty + noise;
-
-        if (score > bestScore) { bestScore = score; bestDir = d; }
-      }
-
-      // Aplicar solo si no es giro de 180°
-      if (bestDir.dx !== 0 && p.dx !== 0) return;
-      if (bestDir.dy !== 0 && p.dy !== 0) return;
-      p.dx = bestDir.dx; p.dy = bestDir.dy;
-    }
-
-    function floodFill(sx, sy, maxDepth) {
-      let count = 0;
-      const stack = [{ x: sx, y: sy, d: 0 }];
-      const visited = new Set();
-      visited.add(sx + ',' + sy);
-      while (stack.length && count < maxDepth * maxDepth) {
-        const { x, y, d } = stack.pop();
-        count++;
-        if (d >= maxDepth) continue;
-        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
-          const nx = x + dx, ny = y + dy;
-          if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS) continue;
-          if (grid[ny][nx] !== 0) continue;
-          const k = nx + ',' + ny;
-          if (visited.has(k)) continue;
-          visited.add(k);
-          stack.push({ x: nx, y: ny, d: d + 1 });
-        }
-      }
-      return count;
-    }
-
-    // ── DIBUJO ────────────────────────────────────────────────────────────────────
-    function drawBg() {
-      ctx.fillStyle = '#000d1f'; ctx.fillRect(0, 0, W, H);
-      const ax = arenaX();
-      ctx.fillStyle = '#000e22'; ctx.fillRect(ax, OFFSET_Y, COLS * CELL, ROWS * CELL);
-      ctx.strokeStyle = 'rgba(0,80,160,0.28)'; ctx.lineWidth = 0.7;
-      for (let r = 0; r <= ROWS; r++) { const y = OFFSET_Y + r * CELL; ctx.beginPath(); ctx.moveTo(ax, y); ctx.lineTo(ax + COLS * CELL, y); ctx.stroke(); }
-      for (let c = 0; c <= COLS; c++) { const x = ax + c * CELL; ctx.beginPath(); ctx.moveTo(x, OFFSET_Y); ctx.lineTo(x, OFFSET_Y + ROWS * CELL); ctx.stroke(); }
-      ctx.strokeStyle = 'rgba(0,160,220,0.35)'; ctx.lineWidth = 1.5;
-      ctx.strokeRect(ax, OFFSET_Y, COLS * CELL, ROWS * CELL);
-    }
-
+    function drawBg() { ctx.fillStyle = '#000d1f'; ctx.fillRect(0, 0, W, H); const ax = arenaX(); ctx.fillStyle = '#000e22'; ctx.fillRect(ax, OFFSET_Y, COLS * CELL, ROWS * CELL); ctx.strokeStyle = 'rgba(0,80,160,0.28)'; ctx.lineWidth = 0.7; for (let r = 0; r <= ROWS; r++) { const y = OFFSET_Y + r * CELL; ctx.beginPath(); ctx.moveTo(ax, y); ctx.lineTo(ax + COLS * CELL, y); ctx.stroke(); } for (let c = 0; c <= COLS; c++) { const x = ax + c * CELL; ctx.beginPath(); ctx.moveTo(x, OFFSET_Y); ctx.lineTo(x, OFFSET_Y + ROWS * CELL); ctx.stroke(); } ctx.strokeStyle = 'rgba(0,160,220,0.35)'; ctx.lineWidth = 1.5; ctx.strokeRect(ax, OFFSET_Y, COLS * CELL, ROWS * CELL); }
     function toScreen(gx, gy) { const ax = arenaX(); return { x: ax + gx * CELL + CELL / 2, y: OFFSET_Y + gy * CELL + CELL / 2 }; }
+    function drawTrailPath(p) { if (p.trail.length < 2) return; const ax = arenaX(), half = CELL / 2; ctx.beginPath(); ctx.moveTo(ax + p.trail[0].x * CELL + half, OFFSET_Y + p.trail[0].y * CELL + half); for (let i = 1; i < p.trail.length; i++)ctx.lineTo(ax + p.trail[i].x * CELL + half, OFFSET_Y + p.trail[i].y * CELL + half); ctx.lineTo(ax + p.x * CELL + half, OFFSET_Y + p.y * CELL + half); ctx.stroke(); }
+    function drawTrails() { players.forEach((p, idx) => { if (p.trail.length < 2) return; const pc = PC[idx]; ctx.lineCap = 'square'; ctx.strokeStyle = pc.glow; ctx.lineWidth = CELL * 0.55; ctx.globalAlpha = 0.12; drawTrailPath(p); ctx.lineWidth = CELL * 0.35; ctx.globalAlpha = 0.22; drawTrailPath(p); ctx.strokeStyle = pc.main; ctx.lineWidth = Math.max(1.5, CELL * 0.2); ctx.globalAlpha = 1; drawTrailPath(p); ctx.globalAlpha = 1; }); }
 
-    function drawTrailPath(p) {
-      if (p.trail.length < 2) return;
-      const ax = arenaX(), half = CELL / 2;
-      ctx.beginPath();
-      ctx.moveTo(ax + p.trail[0].x * CELL + half, OFFSET_Y + p.trail[0].y * CELL + half);
-      for (let i = 1; i < p.trail.length; i++)ctx.lineTo(ax + p.trail[i].x * CELL + half, OFFSET_Y + p.trail[i].y * CELL + half);
-      ctx.lineTo(ax + p.x * CELL + half, OFFSET_Y + p.y * CELL + half);
-      ctx.stroke();
-    }
+    function drawBike(p, idx) { if (!p.alive) return; const pc = PC[idx]; const pos = toScreen(p.x, p.y); const angle = Math.atan2(p.dy, p.dx); const s = CELL * 1.7; ctx.save(); ctx.translate(pos.x, pos.y); ctx.rotate(angle + Math.PI / 2); ctx.shadowColor = pc.glow; ctx.shadowBlur = 14; const w = s * 0.32, h = s * 0.72, wheelR = s * 0.18, wheelW = s * 0.1, frontY = -h * 0.38, backY = h * 0.38; ctx.strokeStyle = pc.main; ctx.lineWidth = wheelW; ctx.globalAlpha = 0.9; ctx.beginPath(); ctx.arc(0, backY, wheelR, 0, Math.PI * 2); ctx.stroke(); ctx.lineWidth = 1.5; ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.arc(0, backY, wheelR * 0.55, 0, Math.PI * 2); ctx.stroke(); ctx.lineWidth = wheelW; ctx.globalAlpha = 0.9; ctx.beginPath(); ctx.arc(0, frontY, wheelR, 0, Math.PI * 2); ctx.stroke(); ctx.lineWidth = 1.5; ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.arc(0, frontY, wheelR * 0.55, 0, Math.PI * 2); ctx.stroke(); ctx.globalAlpha = 1; const tw = w * 0.55; ctx.strokeStyle = pc.main; ctx.fillStyle = pc.dark; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(-tw / 2, frontY + wheelR * 0.8); ctx.lineTo(tw / 2, frontY + wheelR * 0.8); ctx.lineTo(w / 2, backY - wheelR * 0.8); ctx.lineTo(-w / 2, backY - wheelR * 0.8); ctx.closePath(); ctx.fill(); ctx.stroke(); const cabH = h * 0.22, cabW = w * 0.7; ctx.fillStyle = 'rgba(0,0,0,0.75)'; ctx.strokeStyle = pc.main; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(-cabW / 2, frontY + wheelR * 1.1); ctx.lineTo(cabW / 2, frontY + wheelR * 1.1); ctx.lineTo(cabW * 0.35, frontY + wheelR * 1.1 + cabH); ctx.lineTo(-cabW * 0.35, frontY + wheelR * 1.1 + cabH); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.fillStyle = pc.main; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.moveTo(-cabW * 0.28, frontY + wheelR * 1.15); ctx.lineTo(cabW * 0.28, frontY + wheelR * 1.15); ctx.lineTo(cabW * 0.18, frontY + wheelR * 1.15 + cabH * 0.55); ctx.lineTo(-cabW * 0.18, frontY + wheelR * 1.15 + cabH * 0.55); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = pc.main; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.moveTo(-w / 2, backY - wheelR * 0.8); ctx.lineTo(-tw / 2 * 0.8, 0); ctx.lineTo(-cabW / 2 * 0.9, frontY + wheelR * 1.0); ctx.stroke(); ctx.beginPath(); ctx.moveTo(w / 2, backY - wheelR * 0.8); ctx.lineTo(tw / 2 * 0.8, 0); ctx.lineTo(cabW / 2 * 0.9, frontY + wheelR * 1.0); ctx.stroke(); ctx.globalAlpha = 1; ctx.fillStyle = '#fff'; ctx.shadowColor = pc.glow; ctx.shadowBlur = 16; ctx.globalAlpha = 0.95; ctx.beginPath(); ctx.ellipse(0, frontY - wheelR * 0.7, s * 0.06, s * 0.025, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1; if (p.speedBoost > 0) { const flameLen = s * 0.28; const grad = ctx.createLinearGradient(0, backY + wheelR * 0.5, 0, backY + wheelR * 0.5 + flameLen); grad.addColorStop(0, 'rgba(255,255,180,0.95)'); grad.addColorStop(0.5, 'rgba(255,140,0,0.7)'); grad.addColorStop(1, 'rgba(255,60,0,0)'); ctx.fillStyle = grad; ctx.shadowColor = '#ffaa00'; ctx.shadowBlur = 20; ctx.beginPath(); ctx.moveTo(-s * 0.07, backY + wheelR * 0.5); ctx.lineTo(s * 0.07, backY + wheelR * 0.5); ctx.lineTo(s * 0.02, backY + wheelR * 0.5 + flameLen); ctx.lineTo(-s * 0.02, backY + wheelR * 0.5 + flameLen); ctx.closePath(); ctx.fill(); } if (p.isAI) { ctx.restore(); ctx.save(); ctx.translate(pos.x, pos.y); ctx.font = `bold ${Math.max(8, CELL * 0.55)}px 'Courier New'`; ctx.fillStyle = 'rgba(255,106,0,0.9)'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('CPU', 0, -CELL * 1.4); } ctx.shadowBlur = 0; ctx.restore(); }
 
-    function drawTrails() {
-      players.forEach((p, idx) => {
-        if (p.trail.length < 2) return;
-        const pc = PC[idx];
-        ctx.lineCap = 'square';
-        ctx.strokeStyle = pc.glow; ctx.lineWidth = CELL * 0.55; ctx.globalAlpha = 0.12; drawTrailPath(p);
-        ctx.lineWidth = CELL * 0.35; ctx.globalAlpha = 0.22; drawTrailPath(p);
-        ctx.strokeStyle = pc.main; ctx.lineWidth = Math.max(1.5, CELL * 0.2); ctx.globalAlpha = 1; drawTrailPath(p);
-        ctx.globalAlpha = 1;
-      });
-    }
+    function drawPowerUps() { const ax = arenaX(), t = frameCount / 30; powerUps.forEach(pu => { const cx = ax + pu.x * CELL + CELL / 2, cy = OFFSET_Y + pu.y * CELL + CELL / 2; const pulse = 0.7 + 0.3 * Math.sin(t * 2 + pu.x), r = CELL * 1.8 * pulse; if (pu.type === 'trail') { ctx.shadowColor = '#cc00ff'; ctx.shadowBlur = 18; ctx.strokeStyle = `rgba(200,0,255,${0.6 * pulse})`; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke(); ctx.strokeStyle = `rgba(220,80,255,${0.9 * pulse})`; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, r * 0.6, 0, Math.PI * 2); ctx.stroke(); ctx.fillStyle = `rgba(230,120,255,${0.95 * pulse})`; ctx.font = `bold ${Math.floor(CELL * 1.1)}px 'Courier New'`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('+', cx, cy); } else { ctx.shadowColor = '#00ff88'; ctx.shadowBlur = 18; ctx.strokeStyle = `rgba(0,255,130,${0.7 * pulse})`; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(cx, cy - r); ctx.lineTo(cx + r * 0.7, cy); ctx.lineTo(cx, cy + r); ctx.lineTo(cx - r * 0.7, cy); ctx.closePath(); ctx.stroke(); ctx.fillStyle = `rgba(0,255,130,${0.18 * pulse})`; ctx.fill(); ctx.fillStyle = `rgba(0,255,130,${0.95 * pulse})`; ctx.font = `bold ${Math.floor(CELL * 1.1)}px 'Courier New'`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('⚡', cx, cy); } ctx.shadowBlur = 0; }); }
 
-    function drawBike(p, idx) {
-      if (!p.alive) return;
-      const pc = PC[idx];
-      const pos = toScreen(p.x, p.y);
-      const angle = Math.atan2(p.dy, p.dx);
-      const s = CELL * 1.7;
-      ctx.save(); ctx.translate(pos.x, pos.y); ctx.rotate(angle + Math.PI / 2);
-      ctx.shadowColor = pc.glow; ctx.shadowBlur = 14;
-      const w = s * 0.32, h = s * 0.72;
-      const wheelR = s * 0.18, wheelW = s * 0.1;
-      const frontY = -h * 0.38, backY = h * 0.38;
-      // ruedas
-      ctx.strokeStyle = pc.main; ctx.lineWidth = wheelW; ctx.globalAlpha = 0.9;
-      ctx.beginPath(); ctx.arc(0, backY, wheelR, 0, Math.PI * 2); ctx.stroke();
-      ctx.lineWidth = 1.5; ctx.globalAlpha = 0.5;
-      ctx.beginPath(); ctx.arc(0, backY, wheelR * 0.55, 0, Math.PI * 2); ctx.stroke();
-      ctx.lineWidth = wheelW; ctx.globalAlpha = 0.9;
-      ctx.beginPath(); ctx.arc(0, frontY, wheelR, 0, Math.PI * 2); ctx.stroke();
-      ctx.lineWidth = 1.5; ctx.globalAlpha = 0.5;
-      ctx.beginPath(); ctx.arc(0, frontY, wheelR * 0.55, 0, Math.PI * 2); ctx.stroke();
-      ctx.globalAlpha = 1;
-      // chasis
-      const tw = w * 0.55;
-      ctx.strokeStyle = pc.main; ctx.fillStyle = pc.dark; ctx.lineWidth = 1.2;
-      ctx.beginPath();
-      ctx.moveTo(-tw / 2, frontY + wheelR * 0.8); ctx.lineTo(tw / 2, frontY + wheelR * 0.8);
-      ctx.lineTo(w / 2, backY - wheelR * 0.8); ctx.lineTo(-w / 2, backY - wheelR * 0.8);
-      ctx.closePath(); ctx.fill(); ctx.stroke();
-      // cockpit
-      const cabH = h * 0.22, cabW = w * 0.7;
-      ctx.fillStyle = 'rgba(0,0,0,0.75)'; ctx.strokeStyle = pc.main; ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(-cabW / 2, frontY + wheelR * 1.1); ctx.lineTo(cabW / 2, frontY + wheelR * 1.1);
-      ctx.lineTo(cabW * 0.35, frontY + wheelR * 1.1 + cabH); ctx.lineTo(-cabW * 0.35, frontY + wheelR * 1.1 + cabH);
-      ctx.closePath(); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = pc.main; ctx.globalAlpha = 0.85;
-      ctx.beginPath();
-      ctx.moveTo(-cabW * 0.28, frontY + wheelR * 1.15); ctx.lineTo(cabW * 0.28, frontY + wheelR * 1.15);
-      ctx.lineTo(cabW * 0.18, frontY + wheelR * 1.15 + cabH * 0.55); ctx.lineTo(-cabW * 0.18, frontY + wheelR * 1.15 + cabH * 0.55);
-      ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
-      // líneas energía
-      ctx.strokeStyle = pc.main; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.7;
-      ctx.beginPath(); ctx.moveTo(-w / 2, backY - wheelR * 0.8); ctx.lineTo(-tw / 2 * 0.8, 0); ctx.lineTo(-cabW / 2 * 0.9, frontY + wheelR * 1.0); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(w / 2, backY - wheelR * 0.8); ctx.lineTo(tw / 2 * 0.8, 0); ctx.lineTo(cabW / 2 * 0.9, frontY + wheelR * 1.0); ctx.stroke();
-      ctx.globalAlpha = 1;
-      // luz frontal
-      ctx.fillStyle = '#fff'; ctx.shadowColor = pc.glow; ctx.shadowBlur = 16; ctx.globalAlpha = 0.95;
-      ctx.beginPath(); ctx.ellipse(0, frontY - wheelR * 0.7, s * 0.06, s * 0.025, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.globalAlpha = 1;
-      // boost flame
-      if (p.speedBoost > 0) {
-        const flameLen = s * 0.28;
-        const grad = ctx.createLinearGradient(0, backY + wheelR * 0.5, 0, backY + wheelR * 0.5 + flameLen);
-        grad.addColorStop(0, 'rgba(255,255,180,0.95)'); grad.addColorStop(0.5, 'rgba(255,140,0,0.7)'); grad.addColorStop(1, 'rgba(255,60,0,0)');
-        ctx.fillStyle = grad; ctx.shadowColor = '#ffaa00'; ctx.shadowBlur = 20;
-        ctx.beginPath(); ctx.moveTo(-s * 0.07, backY + wheelR * 0.5); ctx.lineTo(s * 0.07, backY + wheelR * 0.5);
-        ctx.lineTo(s * 0.02, backY + wheelR * 0.5 + flameLen); ctx.lineTo(-s * 0.02, backY + wheelR * 0.5 + flameLen);
-        ctx.closePath(); ctx.fill();
-      }
-      // IA badge
-      if (p.isAI) {
-        ctx.restore(); ctx.save(); ctx.translate(pos.x, pos.y);
-        ctx.font = `bold ${Math.max(8, CELL * 0.55)}px 'Courier New'`;
-        ctx.fillStyle = 'rgba(0,200,255,0.7)'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-        ctx.fillText('CPU', 0, -CELL * 1.4);
-      }
-      ctx.shadowBlur = 0; ctx.restore();
-    }
+    function updateHUD() { hiscore = Math.max(hiscore, players[0].score, players[1].score); document.getElementById('h1v').textContent = String(players[0].score).padStart(4, '0'); document.getElementById('h2v').textContent = String(players[1].score).padStart(4, '0'); document.getElementById('hisv').textContent = String(hiscore).padStart(4, '0'); const h1v = document.getElementById('h1v'), h2v = document.getElementById('h2v'); h1v.style.color = PC[0].main; h1v.style.textShadow = `0 0 8px ${PC[0].main}`; h2v.style.color = PC[1].main; h2v.style.textShadow = `0 0 8px ${PC[1].main}`; if (currentMode === 'classic') { document.getElementById('ind1').textContent = `▬ ${players[0].trailLength}${players[0].speedBoost > 0 ? ' ⚡' : ''}`; document.getElementById('ind2').textContent = `${players[1].trailLength} ▬${players[1].speedBoost > 0 ? ' ⚡' : ''}`; } else { document.getElementById('ind1').textContent = '∞ TRAIL'; document.getElementById('ind2').textContent = 'TRAIL ∞'; } }
 
-    function drawPowerUps() {
-      const ax = arenaX(), t = frameCount / 30;
-      powerUps.forEach(pu => {
-        const cx = ax + pu.x * CELL + CELL / 2, cy = OFFSET_Y + pu.y * CELL + CELL / 2;
-        const pulse = 0.7 + 0.3 * Math.sin(t * 2 + pu.x);
-        const r = CELL * 1.8 * pulse;
-        if (pu.type === 'trail') {
-          ctx.shadowColor = '#cc00ff'; ctx.shadowBlur = 18;
-          ctx.strokeStyle = `rgba(200,0,255,${0.6 * pulse})`; ctx.lineWidth = 2.5;
-          ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
-          ctx.strokeStyle = `rgba(220,80,255,${0.9 * pulse})`; ctx.lineWidth = 1.5;
-          ctx.beginPath(); ctx.arc(cx, cy, r * 0.6, 0, Math.PI * 2); ctx.stroke();
-          ctx.fillStyle = `rgba(230,120,255,${0.95 * pulse})`;
-          ctx.font = `bold ${Math.floor(CELL * 1.1)}px 'Courier New'`;
-          ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('+', cx, cy);
-        } else {
-          ctx.shadowColor = '#00ff88'; ctx.shadowBlur = 18;
-          ctx.strokeStyle = `rgba(0,255,130,${0.7 * pulse})`; ctx.lineWidth = 2.5;
-          ctx.beginPath(); ctx.moveTo(cx, cy - r); ctx.lineTo(cx + r * 0.7, cy); ctx.lineTo(cx, cy + r); ctx.lineTo(cx - r * 0.7, cy); ctx.closePath(); ctx.stroke();
-          ctx.fillStyle = `rgba(0,255,130,${0.18 * pulse})`; ctx.fill();
-          ctx.fillStyle = `rgba(0,255,130,${0.95 * pulse})`;
-          ctx.font = `bold ${Math.floor(CELL * 1.1)}px 'Courier New'`;
-          ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('⚡', cx, cy);
-        }
-        ctx.shadowBlur = 0;
-      });
-    }
+    function updatePlayer(p, idx) { if (!p.alive) return; const spd = p.speedBoost > 0 ? 4 : 6; if (frameCount % spd !== 0) return; if (p.speedBoost > 0) p.speedBoost--; if (p.isAI) aiMove(p, players[idx === 0 ? 1 : 0]); const nx = p.x + p.dx, ny = p.y + p.dy; if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS) { p.alive = false; sfxCrash(); return; } if (grid[ny][nx] !== 0) { p.alive = false; sfxCrash(); return; } grid[p.y][p.x] = idx + 1; p.trail.push({ x: p.x, y: p.y }); if (currentMode === 'classic') { while (p.trail.length > p.trailLength) { const old = p.trail.shift(); if (grid[old.y][old.x] === idx + 1) grid[old.y][old.x] = 0; } } p.x = nx; p.y = ny; p.score += 1; engineTick[idx]++; if (engineTick[idx] % 2 === 0) sfxEngine(idx); if (currentMode === 'classic') { for (let i = powerUps.length - 1; i >= 0; i--) { const pu = powerUps[i]; const dist = Math.abs(pu.x - p.x) + Math.abs(pu.y - p.y); if (dist <= PU_RADIUS) { if (pu.type === 'trail') { p.trailLength = Math.min(p.trailLength + 5, 80); p.score += 50; } else { p.speedBoost = 100; p.score += 30; } sfxPowerUp(pu.type); powerUps.splice(i, 1); } } } }
 
-    function updateHUD() {
-      hiscore = Math.max(hiscore, players[0].score, players[1].score);
-      document.getElementById('h1v').textContent = String(players[0].score).padStart(4, '0');
-      document.getElementById('h2v').textContent = String(players[1].score).padStart(4, '0');
-      document.getElementById('hisv').textContent = String(hiscore).padStart(4, '0');
-      // ind1
-      if (currentMode === 'classic') {
-        document.getElementById('ind1').textContent = `▬ ${players[0].trailLength}${players[0].speedBoost > 0 ? ' ⚡' : ''}`;
-        document.getElementById('ind2').textContent = `${players[1].trailLength} ▬${players[1].speedBoost > 0 ? ' ⚡' : ''}`;
-      } else {
-        document.getElementById('ind1').textContent = '∞ TRAIL';
-        document.getElementById('ind2').textContent = 'TRAIL ∞';
-      }
-    }
+    function gameStep() { frameCount++; updatePlayer(players[0], 0); updatePlayer(players[1], 1); if (currentMode === 'classic' && frameCount % 85 === 0 && powerUps.length < 5) spawnPowerUp(); drawBg(); drawTrails(); if (currentMode === 'classic') drawPowerUps(); drawBike(players[0], 0); drawBike(players[1], 1); updateHUD(); const a1 = players[0].alive, a2 = players[1].alive; if (!a1 || !a2) { running = false; cancelAnimationFrame(gameLoop); setTimeout(() => showResult(a1, a2), 400); return; } gameLoop = requestAnimationFrame(gameStep); }
 
-    // ── LÓGICA DE JUGADOR ─────────────────────────────────────────────────────────
-    function updatePlayer(p, idx) {
-      if (!p.alive) return;
-      const spd = p.speedBoost > 0 ? 4 : 6;
-      if (frameCount % spd !== 0) return;
-      if (p.speedBoost > 0) p.speedBoost--;
+    function showResult(a1, a2) { const ov = document.getElementById('overlay'), wt = document.getElementById('ov-winner'), btn = document.querySelector('#menu-screen .ov-btn.primary'); if (!a1 && !a2) { wt.textContent = '— DRAW —'; wt.style.color = '#fff'; wt.style.textShadow = '0 0 10px #fff'; } else if (a1) { players[0].wins++; wt.textContent = currentPlayers === 1 ? 'YOU WIN!' : 'PLAYER 1 WINS'; wt.style.color = PC[0].main; wt.style.textShadow = `0 0 16px ${PC[0].main}`; sfxWin(); } else { players[1].wins++; wt.textContent = currentPlayers === 1 ? 'CPU WINS' : 'PLAYER 2 WINS'; wt.style.color = PC[1].main; wt.style.textShadow = `0 0 16px ${PC[1].main}`; if (currentPlayers === 2) sfxWin(); } wt.style.display = 'block'; document.getElementById('coin-screen').style.display = 'none'; document.getElementById('menu-screen').style.display = 'flex'; if (btn) btn.textContent = 'JUGAR DE NUEVO'; ov.style.display = 'flex'; stopMusic(); }
 
-      // IA decide dirección antes de moverse
-      if (p.isAI) {
-        aiMove(p, players[idx === 0 ? 1 : 0]);
-      }
-
-      const nx = p.x + p.dx, ny = p.y + p.dy;
-      if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS) { p.alive = false; sfxCrash(); return; }
-      if (grid[ny][nx] !== 0) { p.alive = false; sfxCrash(); return; }
-
-      // marcar celda actual como ocupada
-      grid[p.y][p.x] = idx + 1;
-      p.trail.push({ x: p.x, y: p.y });
-
-      // En modo classic: recortar estela. En infinite: nunca se borra
-      if (currentMode === 'classic') {
-        while (p.trail.length > p.trailLength) {
-          const old = p.trail.shift();
-          if (grid[old.y][old.x] === idx + 1) grid[old.y][old.x] = 0;
-        }
-      }
-
-      p.x = nx; p.y = ny; p.score += 1;
-      engineTick[idx]++;
-      if (engineTick[idx] % 2 === 0) sfxEngine(idx);
-
-      // power-ups solo en modo classic
-      if (currentMode === 'classic') {
-        for (let i = powerUps.length - 1; i >= 0; i--) {
-          const pu = powerUps[i];
-          const dist = Math.abs(pu.x - p.x) + Math.abs(pu.y - p.y);
-          if (dist <= PU_RADIUS) {
-            if (pu.type === 'trail') { p.trailLength = Math.min(p.trailLength + 5, 80); p.score += 50; }
-            else { p.speedBoost = 100; p.score += 30; }
-            sfxPowerUp(pu.type); powerUps.splice(i, 1);
-          }
-        }
-      }
-    }
-
-    function gameStep() {
-      frameCount++;
-      updatePlayer(players[0], 0);
-      updatePlayer(players[1], 1);
-      if (currentMode === 'classic' && frameCount % 85 === 0 && powerUps.length < 5) spawnPowerUp();
-      drawBg(); drawTrails();
-      if (currentMode === 'classic') drawPowerUps();
-      drawBike(players[0], 0); drawBike(players[1], 1);
-      updateHUD();
-      const a1 = players[0].alive, a2 = players[1].alive;
-      if (!a1 || !a2) { running = false; cancelAnimationFrame(gameLoop); setTimeout(() => showResult(a1, a2), 400); return; }
-      gameLoop = requestAnimationFrame(gameStep);
-    }
-
-    function showResult(a1, a2) {
-      const ov = document.getElementById('overlay'), wt = document.getElementById('ov-winner'), btn = document.querySelector('#menu-screen .ov-btn.primary');
-      if (!a1 && !a2) { wt.textContent = '— DRAW —'; wt.style.color = '#fff'; wt.style.textShadow = '0 0 10px #fff'; }
-      else if (a1) { players[0].wins++; wt.textContent = currentPlayers === 1 ? 'YOU WIN!' : 'PLAYER 1 WINS'; wt.style.color = '#ffe050'; wt.style.textShadow = '0 0 16px #ffe050'; sfxWin(); }
-      else { players[1].wins++; wt.textContent = currentPlayers === 1 ? 'CPU WINS' : 'PLAYER 2 WINS'; wt.style.color = '#00d4ff'; wt.style.textShadow = '0 0 16px #00d4ff'; if (currentPlayers === 2) sfxWin(); }
-      wt.style.display = 'block';
-      document.getElementById('coin-screen').style.display = 'none';
-      document.getElementById('menu-screen').style.display = 'flex';
-      if (btn) btn.textContent = 'JUGAR DE NUEVO';
-      ov.style.display = 'flex';
-    }
-
-    function applyDir(p, dx, dy) {
-      if (dx !== 0 && p.dx !== 0) return;
-      if (dy !== 0 && p.dy !== 0) return;
-      p.dx = dx; p.dy = dy; sfxTurn();
-    }
+    function applyDir(p, dx, dy) { if (dx !== 0 && p.dx !== 0) return; if (dy !== 0 && p.dy !== 0) return; p.dx = dx; p.dy = dy; sfxTurn(); }
 
     function startGame() {
       getSfx();
       currentMode = selectedMode;
       currentPlayers = selectedPlayers;
+      // Colores según modo
+      PC = currentPlayers === 1 ? PC_CPU : PC_2P;
       document.getElementById('overlay').style.display = 'none';
       document.getElementById('ov-winner').style.display = 'none';
-
-      // badge de modo en HUD
       const modeLabel = currentMode === 'infinite' ? '∞ INFINITE TRAIL' : '◈ CLASSIC';
       const playersLabel = currentPlayers === 1 ? '· VS CPU' : '· 2P';
       document.getElementById('mode-badge').textContent = modeLabel + playersLabel;
-
-      // bloquear dpad derecho si es single player
       document.getElementById('dpad2').classList.toggle('locked', currentPlayers === 1);
-
       const w0 = players[0]?.wins || 0, w1 = players[1]?.wins || 0;
       const s0 = players[0]?.score || 0, s1 = players[1]?.score || 0;
       resize(); initGrid(); powerUps = []; frameCount = 0; engineTick = [0, 0];
@@ -1029,45 +692,60 @@
       players[0].wins = w0; players[1].wins = w1;
       players[0].score = s0; players[1].score = s1;
       running = true;
+      if (bgm && bgm.paused) playMusic();
       if (gameLoop) cancelAnimationFrame(gameLoop);
       gameLoop = requestAnimationFrame(gameStep);
     }
 
-    // ── CONTROLES TECLADO ────────────────────────────────────────────────────────
-    document.addEventListener('keydown', e => {
-      if (!running) return;
-      const p1 = players[0], p2 = players[1];
-      if (e.key === 'ArrowUp') applyDir(p1, 0, -1);
-      if (e.key === 'ArrowDown') applyDir(p1, 0, 1);
-      if (e.key === 'ArrowLeft') applyDir(p1, -1, 0);
-      if (e.key === 'ArrowRight') applyDir(p1, 1, 0);
-      // P2 solo si no es IA
-      if (!p2.isAI) {
-        if (e.key === 'w') applyDir(p2, 0, -1);
-        if (e.key === 's') applyDir(p2, 0, 1);
-        if (e.key === 'a') applyDir(p2, -1, 0);
-        if (e.key === 'd') applyDir(p2, 1, 0);
+    document.addEventListener('keydown', e => { if (!running) return; const p1 = players[0], p2 = players[1]; if (e.key === 'ArrowUp') applyDir(p1, 0, -1); if (e.key === 'ArrowDown') applyDir(p1, 0, 1); if (e.key === 'ArrowLeft') applyDir(p1, -1, 0); if (e.key === 'ArrowRight') applyDir(p1, 1, 0); if (!p2.isAI) { if (e.key === 'w') applyDir(p2, 0, -1); if (e.key === 's') applyDir(p2, 0, 1); if (e.key === 'a') applyDir(p2, -1, 0); if (e.key === 'd') applyDir(p2, 1, 0); } });
+    ['up', 'down', 'left', 'right'].forEach(dir => { const map = { up: { dx: 0, dy: -1 }, down: { dx: 0, dy: 1 }, left: { dx: -1, dy: 0 }, right: { dx: 1, dy: 0 } };[1, 2].forEach(pi => { const el = document.getElementById(`p${pi}${dir}`); if (!el) return; const act = () => { if (!running) return; const p = players[pi - 1]; if (p.isAI) return; applyDir(p, map[dir].dx, map[dir].dy); el.classList.add('pressed'); setTimeout(() => el.classList.remove('pressed'), 100); }; el.addEventListener('touchstart', e => { e.preventDefault(); act(); }, { passive: false }); el.addEventListener('mousedown', act); }); });
+
+    // ── MÚSICA ──────────────────────────────────────────────────────────────────
+    // Rutas .mp3 correctas
+    const musicTracks = [
+      '/assets/audio/musica1.mp3',
+      '/assets/audio/musica2.mp3',
+      '/assets/audio/musica3.mp3'
+    ];
+    let currentTrackIndex = 0, bgm = null;
+
+    function initMusic() {
+      bgm = document.getElementById('bgm');
+      if (!bgm) return;
+      bgm.loop = false;
+      bgm.volume = 0.7;
+      bgm.addEventListener('ended', nextTrack);
+      // Precargar sin reproducir
+      bgm.src = musicTracks[0];
+      bgm.load();
+    }
+
+    function playMusic() {
+      if (!bgm) return;
+      // Si la src está vacía o es la página actual, asignar pista
+      if (!bgm.getAttribute('src')) {
+        bgm.src = musicTracks[currentTrackIndex];
+        bgm.load();
       }
-    });
+      bgm.play().catch(err => console.warn('Audio bloqueado por el navegador:', err));
+    }
 
-    // ── CONTROLES TÁCTILES ────────────────────────────────────────────────────────
-    ['up', 'down', 'left', 'right'].forEach(dir => {
-      const map = { up: { dx: 0, dy: -1 }, down: { dx: 0, dy: 1 }, left: { dx: -1, dy: 0 }, right: { dx: 1, dy: 0 } };
-      [1, 2].forEach(pi => {
-        const el = document.getElementById(`p${pi}${dir}`);
-        if (!el) return;
-        const act = () => {
-          if (!running) return;
-          const p = players[pi - 1];
-          if (p.isAI) return; // no aceptar input en dpad de IA
-          applyDir(p, map[dir].dx, map[dir].dy);
-          el.classList.add('pressed'); setTimeout(() => el.classList.remove('pressed'), 100);
-        };
-        el.addEventListener('touchstart', e => { e.preventDefault(); act(); }, { passive: false });
-        el.addEventListener('mousedown', act);
-      });
-    });
+    function nextTrack() {
+      if (!bgm) return;
+      currentTrackIndex = (currentTrackIndex + 1) % musicTracks.length;
+      bgm.src = musicTracks[currentTrackIndex];
+      bgm.load();
+      bgm.play().catch(err => console.warn('Audio bloqueado:', err));
+    }
 
+    // FIX: descomentada — showResult() la necesita
+    function stopMusic() {
+      if (!bgm) return;
+      bgm.pause();
+      bgm.currentTime = 0;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => initMusic());
     drawBg();
   </script>
 </body>
