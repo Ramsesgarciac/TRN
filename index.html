@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <title>TRON · Light Cycle Battle</title>
+  <title>TRON - Light Cycle Battle</title>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#000d1f">
   <meta name="mobile-web-app-capable" content="yes">
@@ -32,7 +32,6 @@
       left: 0;
     }
 
-    /* SPLASH */
     #splash {
       position: fixed;
       inset: 0;
@@ -120,7 +119,6 @@
       color: rgba(0, 180, 255, 0.45);
     }
 
-    /* HUD */
     #hud {
       position: fixed;
       top: 0;
@@ -180,7 +178,6 @@
       margin-top: 1px;
     }
 
-    /* DPADS */
     .dpad {
       position: fixed;
       display: grid;
@@ -232,94 +229,74 @@
       pointer-events: none;
     }
 
-    /* JOYSTICKS */
-    .joystick-wrap {
+    /* DISC CONTROLS */
+    #disc-ui {
       position: fixed;
       z-index: 20;
-      bottom: 28px;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-    }
-
-    #js-move {
-      left: 14px;
-    }
-
-    #js-aim-p1 {
-      left: 14px;
-    }
-
-    #js-p2-move {
-      right: 14px;
-    }
-
-    #js-p2-aim {
-      right: 14px;
-    }
-
-    .joystick-label {
-      font-family: 'Courier New', monospace;
-      font-size: 8px;
-      letter-spacing: 2px;
-      color: rgba(0, 200, 255, 0.4);
-    }
-
-    .joystick-base {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background: rgba(0, 20, 50, 0.75);
-      border: 2px solid rgba(0, 200, 255, 0.3);
-      position: relative;
-      touch-action: none;
-      cursor: grab;
-    }
-
-    .joystick-knob {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: rgba(0, 180, 255, 0.25);
-      border: 2px solid rgba(0, 200, 255, 0.7);
-      position: absolute;
-      pointer-events: none;
-    }
-
-    .js-orange .joystick-base {
-      border-color: rgba(255, 106, 0, 0.4);
-    }
-
-    .js-orange .joystick-knob {
-      background: rgba(255, 106, 0, 0.3);
-      border-color: rgba(255, 106, 0, 0.9);
-    }
-
-    .joystick-base.locked {
-      opacity: 0.15;
-      pointer-events: none;
-    }
-
-    /* 2-column joystick layout for 2P discs */
-    #disc-controls-1p,
-    #disc-controls-2p {
-      position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
-      z-index: 20;
       display: none;
-      justify-content: space-between;
       align-items: flex-end;
-      padding: 12px 14px;
+      justify-content: space-around;
+      padding: 0 5% 18px;
     }
 
-    .js-col {
+    .js-group {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 5px;
+    }
+
+    .js-pair {
+      display: flex;
+      flex-direction: row;
+      gap: 14px;
+      align-items: flex-end;
+    }
+
+    .js-lbl {
+      font-family: 'Courier New', monospace;
+      font-size: 8px;
+      letter-spacing: 2px;
+      color: rgba(0, 200, 255, 0.45);
+      text-align: center;
+    }
+
+    .js-lbl.og {
+      color: rgba(255, 140, 0, 0.5);
+    }
+
+    .jbase {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: rgba(0, 12, 35, 0.85);
+      border: 2px solid rgba(0, 180, 255, 0.38);
+      position: relative;
+      touch-action: none;
+    }
+
+    .jbase.og {
+      border-color: rgba(255, 120, 0, 0.48);
+    }
+
+    .jknob {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(0, 150, 255, 0.32);
+      border: 2px solid rgba(0, 200, 255, 0.8);
+      position: absolute;
+      top: 30px;
+      left: 30px;
+      pointer-events: none;
+    }
+
+    .jknob.og {
+      background: rgba(255, 110, 0, 0.32);
+      border-color: rgba(255, 140, 0, 0.88);
     }
 
     /* OVERLAY */
@@ -579,482 +556,369 @@
     </div>
     <div class="splash-status" id="splash-status">INITIALIZING GRID...</div>
   </div>
-
   <canvas id="c"></canvas>
-
   <div id="hud">
     <div class="hud-block"><span class="hud-label">1ST</span><span class="hud-val" id="h1v">0000</span></div>
     <div class="hud-block" style="flex-direction:column;gap:0;align-items:center;">
       <div style="display:flex;gap:20px;align-items:center;">
-        <span class="hud-val" id="ind1">▬ 5</span>
+        <span class="hud-val" id="ind1">- 5</span>
         <div class="hud-block"><span class="hud-label">HISCORE</span><span class="hud-val" id="hisv">0000</span></div>
-        <span class="hud-val" id="ind2">5 ▬</span>
+        <span class="hud-val" id="ind2">5 -</span>
       </div>
-      <span id="mode-badge">—</span>
+      <span id="mode-badge">-</span>
     </div>
     <div class="hud-block"><span class="hud-label">2ND</span><span class="hud-val" id="h2v">0000</span></div>
   </div>
-
-  <!-- DPADS motos -->
   <div class="dpad" id="dpad1" style="display:none;">
     <div class="btn empty"></div>
-    <div class="btn" id="p1up">▲</div>
+    <div class="btn" id="p1up">&#9650;</div>
     <div class="btn empty"></div>
-    <div class="btn" id="p1left">◀</div>
+    <div class="btn" id="p1left">&#9664;</div>
     <div class="btn empty"></div>
-    <div class="btn" id="p1right">▶</div>
+    <div class="btn" id="p1right">&#9654;</div>
     <div class="btn empty"></div>
-    <div class="btn" id="p1down">▼</div>
+    <div class="btn" id="p1down">&#9660;</div>
     <div class="btn empty"></div>
   </div>
   <div class="dpad" id="dpad2" style="display:none;">
     <div class="btn empty"></div>
-    <div class="btn" id="p2up">▲</div>
+    <div class="btn" id="p2up">&#9650;</div>
     <div class="btn empty"></div>
-    <div class="btn" id="p2left">◀</div>
+    <div class="btn" id="p2left">&#9664;</div>
     <div class="btn empty"></div>
-    <div class="btn" id="p2right">▶</div>
+    <div class="btn" id="p2right">&#9654;</div>
     <div class="btn empty"></div>
-    <div class="btn" id="p2down">▼</div>
+    <div class="btn" id="p2down">&#9660;</div>
     <div class="btn empty"></div>
   </div>
-
-  <!-- Controles DISCOS 1P: joystick mover izq + joystick lanzar der -->
-  <div id="disc-controls-1p">
-    <div class="js-col">
-      <div class="joystick-label">MOVER</div>
-      <div class="joystick-base" id="jsb-move1p">
-        <div class="joystick-knob" id="jsk-move1p" style="top:31px;left:31px;"></div>
-      </div>
-    </div>
-    <div class="js-col">
-      <div class="joystick-label">LANZAR</div>
-      <div class="joystick-base js-orange" id="jsb-aim1p">
-        <div class="joystick-knob" id="jsk-aim1p" style="top:31px;left:31px;"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Controles DISCOS 2P: P1 izq (mover+lanzar), P2 der (mover+lanzar) -->
-  <div id="disc-controls-2p">
-    <div class="js-col">
-      <div class="joystick-label" style="color:rgba(0,200,255,0.5);">P1 MOVER</div>
-      <div class="joystick-base" id="jsb-p1move">
-        <div class="joystick-knob" id="jsk-p1move" style="top:31px;left:31px;"></div>
-      </div>
-      <div class="joystick-label" style="color:rgba(0,200,255,0.5);margin-top:8px;">P1 LANZAR</div>
-      <div class="joystick-base" id="jsb-p1aim">
-        <div class="joystick-knob" id="jsk-p1aim" style="top:31px;left:31px;"></div>
-      </div>
-    </div>
-    <div class="js-col">
-      <div class="joystick-label" style="color:rgba(255,220,0,0.5);">P2 MOVER</div>
-      <div class="joystick-base js-orange" id="jsb-p2move">
-        <div class="joystick-knob" id="jsk-p2move" style="top:31px;left:31px;"></div>
-      </div>
-      <div class="joystick-label" style="color:rgba(255,220,0,0.5);margin-top:8px;">P2 LANZAR</div>
-      <div class="joystick-base js-orange" id="jsb-p2aim">
-        <div class="joystick-knob" id="jsk-p2aim" style="top:31px;left:31px;"></div>
-      </div>
-    </div>
-  </div>
-
+  <div id="disc-ui"></div>
   <div id="install-banner">
-    <span>📲 INSTALAR EN TU DISPOSITIVO</span>
+    <span>INSTALAR EN TU DISPOSITIVO</span>
     <button id="install-btn">INSTALAR</button>
-    <button id="dismiss-btn">✕</button>
+    <button id="dismiss-btn">X</button>
   </div>
-
   <div id="overlay">
     <div class="ov-border">
       <div id="ov-title">TRON</div>
       <div id="ov-sub">LIGHT CYCLE BATTLE</div>
       <div id="ov-winner" style="display:none;"></div>
-      <div id="coin-screen">
-        <button class="ov-btn primary" onclick="showMenu()">INSERT COIN</button>
-      </div>
+      <div id="coin-screen"><button class="ov-btn primary" onclick="showMenu()">INSERT COIN</button></div>
       <div id="menu-screen">
-        <span class="menu-section-title">— MODO DE JUEGO —</span>
+        <span class="menu-section-title">- MODO DE JUEGO -</span>
         <div class="mode-card selected" id="card-classic" onclick="selectMode('classic')">
-          <div class="mode-icon">🏍️</div>
+          <div class="mode-icon">&#128757;</div>
           <div class="mode-info">
             <div class="mode-name">CLASSIC</div>
-            <div class="mode-desc">Estela variable · Power-ups · Boost</div>
+            <div class="mode-desc">Estela variable - Power-ups - Boost</div>
           </div>
           <div class="mode-tag tag-classic">CLASSIC</div>
         </div>
         <div class="mode-card" id="card-infinite" onclick="selectMode('infinite')">
-          <div class="mode-icon">∞</div>
+          <div class="mode-icon">&#8734;</div>
           <div class="mode-info">
             <div class="mode-name">INFINITE TRAIL</div>
-            <div class="mode-desc">Estela permanente · Sin power-ups</div>
+            <div class="mode-desc">Estela permanente desde el inicio - Sin power-ups</div>
           </div>
           <div class="mode-tag tag-infinite">NEW</div>
         </div>
         <div class="mode-card" id="card-discs" onclick="selectMode('discs')">
-          <div class="mode-icon">💿</div>
+          <div class="mode-icon">&#128191;</div>
           <div class="mode-info">
             <div class="mode-name">DISCOS</div>
-            <div class="mode-desc">Lanza tu disco · Rebota en el cuadrante enemigo · No seas tocado</div>
+            <div class="mode-desc">Un disco unitario - Rebota en cuadrante enemigo - 3 vidas</div>
           </div>
           <div class="mode-tag tag-discs">DISCS</div>
         </div>
         <div class="menu-divider"></div>
-        <span class="menu-section-title">— JUGADORES —</span>
+        <span class="menu-section-title">- JUGADORES -</span>
         <div style="display:flex;gap:10px;width:100%;">
           <div class="mode-card selected" id="card-2p" onclick="selectPlayers(2)"
             style="flex:1;justify-content:center;">
             <div style="text-align:center;">
-              <div class="mode-icon">👤👤</div>
+              <div class="mode-icon">&#128100;&#128100;</div>
               <div class="mode-name" style="font-size:10px;margin-top:4px;">2 PLAYERS</div>
             </div>
           </div>
           <div class="mode-card" id="card-1p" onclick="selectPlayers(1)" style="flex:1;justify-content:center;">
             <div style="text-align:center;">
-              <div class="mode-icon">👤🤖</div>
+              <div class="mode-icon">&#128100;&#129302;</div>
               <div class="mode-name" style="font-size:10px;margin-top:4px;">VS CPU</div>
             </div>
           </div>
         </div>
         <div class="menu-divider"></div>
         <button class="ov-btn primary" onclick="startGame()">ARRANCAR</button>
-        <button class="ov-btn" onclick="showCoin()" style="font-size:9px;padding:6px;opacity:0.5;">← VOLVER</button>
+        <button class="ov-btn" onclick="showCoin()" style="font-size:9px;padding:6px;opacity:0.5;">VOLVER</button>
       </div>
     </div>
   </div>
-
   <audio id="bgm" preload="auto" style="display:none;"></audio>
-
   <script>
-    // ── SERVICE WORKER ───────────────────────────────────────────────────────────
-    if ('serviceWorker' in navigator)
-      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => { }));
 
+    if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => { }));
     let deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; document.getElementById('install-banner').style.display = 'flex'; });
     document.getElementById('install-btn').addEventListener('click', () => { if (!deferredPrompt) return; deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => { deferredPrompt = null; document.getElementById('install-banner').style.display = 'none'; }); });
     document.getElementById('dismiss-btn').addEventListener('click', () => document.getElementById('install-banner').style.display = 'none');
-
-    // ── SPLASH ───────────────────────────────────────────────────────────────────
-    (function () { const sgc = document.getElementById('sgc'), sc = sgc.getContext('2d'); sgc.width = window.innerWidth; sgc.height = window.innerHeight; sc.strokeStyle = 'rgba(0,180,255,1)'; sc.lineWidth = 0.8; for (let x = 0; x <= sgc.width; x += 32) { sc.beginPath(); sc.moveTo(x, 0); sc.lineTo(x, sgc.height); sc.stroke(); } for (let y = 0; y <= sgc.height; y += 32) { sc.beginPath(); sc.moveTo(0, y); sc.lineTo(sgc.width, y); sc.stroke(); } })();
+    (function () { const sgc = document.getElementById('sgc'), sc = sgc.getContext('2d'); sgc.width = innerWidth; sgc.height = innerHeight; sc.strokeStyle = 'rgba(0,180,255,1)'; sc.lineWidth = 0.8; for (let x = 0; x <= sgc.width; x += 32) { sc.beginPath(); sc.moveTo(x, 0); sc.lineTo(x, sgc.height); sc.stroke(); } for (let y = 0; y <= sgc.height; y += 32) { sc.beginPath(); sc.moveTo(0, y); sc.lineTo(sgc.width, y); sc.stroke(); } })();
     const msgs = ['INITIALIZING GRID...', 'LOADING LIGHT CYCLES...', 'CALIBRATING ARENA...', 'SYSTEM READY'];
     let mi = 0; const statusEl = document.getElementById('splash-status');
     const msgTimer = setInterval(() => { mi++; if (mi < msgs.length) statusEl.textContent = msgs[mi]; else clearInterval(msgTimer); }, 450);
     setTimeout(() => { const s = document.getElementById('splash'); s.classList.add('hide'); setTimeout(() => s.style.display = 'none', 650); }, 1900);
-
-    // ── MÚSICA ALEATORIA ─────────────────────────────────────────────────────────
     const musicTracks = ['/assets/audio/musica1.mp3', '/assets/audio/musica2.mp3', '/assets/audio/musica3.mp3'];
-    let bgm = null, shuffled = [], trackIdx = 0;
-
-    function shuffle(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
-    function initMusic() { bgm = document.getElementById('bgm'); if (!bgm) return; shuffled = shuffle(musicTracks); bgm.loop = false; bgm.volume = 0.7; bgm.src = shuffled[0]; bgm.load(); bgm.addEventListener('ended', nextTrack); }
-    function nextTrack() { if (!bgm) return; trackIdx = (trackIdx + 1) % shuffled.length; if (trackIdx === 0) shuffled = shuffle(musicTracks); bgm.src = shuffled[trackIdx]; bgm.load(); bgm.play().catch(() => { }); }
-    function playMusic() { if (!bgm) return; bgm.play().catch(() => { }); }
-    function stopMusic() { if (!bgm) return; bgm.pause(); bgm.currentTime = 0; }
+    let bgm = null, shuffled = [], tIdx = 0;
+    function shuffle(a) { const b = [...a]; for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[b[i], b[j]] = [b[j], b[i]]; } return b; }
+    function initMusic() { bgm = document.getElementById('bgm'); if (!bgm) return; shuffled = shuffle(musicTracks); bgm.loop = false; bgm.volume = 0.7; bgm.src = shuffled[0]; bgm.load(); bgm.addEventListener('ended', () => { tIdx = (tIdx + 1) % shuffled.length; if (tIdx === 0) shuffled = shuffle(musicTracks); bgm.src = shuffled[tIdx]; bgm.load(); bgm.play().catch(() => { }); }); }
+    function playMusic() { if (bgm) bgm.play().catch(() => { }); }
+    function stopMusic() { if (bgm) { bgm.pause(); bgm.currentTime = 0; } }
     document.addEventListener('DOMContentLoaded', () => initMusic());
-
-    // ── SONIDO FX ────────────────────────────────────────────────────────────────
     let sfxCtx = null;
     function getSfx() { if (!sfxCtx) sfxCtx = new (window.AudioContext || window.webkitAudioContext)(); return sfxCtx; }
-    function sfxEngine(idx) { const a = getSfx(), now = a.currentTime, osc = a.createOscillator(), g = a.createGain(); osc.type = 'square'; osc.frequency.value = idx === 0 ? 440 : 290; g.gain.setValueAtTime(0.06, now); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.045); osc.connect(g); g.connect(a.destination); osc.start(now); osc.stop(now + 0.05); }
-    function sfxTurn() { const a = getSfx(), now = a.currentTime, osc = a.createOscillator(), g = a.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(700, now); osc.frequency.exponentialRampToValueAtTime(200, now + 0.09); g.gain.setValueAtTime(0.13, now); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.1); osc.connect(g); g.connect(a.destination); osc.start(now); osc.stop(now + 0.11); }
-    function sfxCrash() { const a = getSfx(), now = a.currentTime; const buf = a.createBuffer(1, a.sampleRate * 0.55, a.sampleRate), d = buf.getChannelData(0); for (let i = 0; i < d.length; i++)d[i] = Math.random() * 2 - 1; const src = a.createBufferSource(); src.buffer = buf; const flt = a.createBiquadFilter(); flt.type = 'lowpass'; flt.frequency.value = 900; const g1 = a.createGain(); g1.gain.setValueAtTime(0.9, now); g1.gain.exponentialRampToValueAtTime(0.0001, now + 0.5); src.connect(flt); flt.connect(g1); g1.connect(a.destination); src.start(now); src.stop(now + 0.55); const osc = a.createOscillator(), g2 = a.createGain(); osc.type = 'sawtooth'; osc.frequency.setValueAtTime(280, now); osc.frequency.exponentialRampToValueAtTime(35, now + 0.45); g2.gain.setValueAtTime(0.4, now); g2.gain.exponentialRampToValueAtTime(0.0001, now + 0.45); osc.connect(g2); g2.connect(a.destination); osc.start(now); osc.stop(now + 0.5); }
-    function sfxPowerUp(type) { const a = getSfx(), now = a.currentTime, freqs = type === 'speed' ? [400, 600, 900, 1200] : [300, 450, 600]; freqs.forEach((f, i) => { const osc = a.createOscillator(), g = a.createGain(), t = now + i * 0.07; osc.type = 'sine'; osc.frequency.value = f; g.gain.setValueAtTime(0.22, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.14); osc.connect(g); g.connect(a.destination); osc.start(t); osc.stop(t + 0.16); }); }
-    function sfxWin() { const a = getSfx(), now = a.currentTime;[523, 659, 784, 1047].forEach((f, i) => { const osc = a.createOscillator(), g = a.createGain(), t = now + i * 0.14; osc.type = 'square'; osc.frequency.value = f; g.gain.setValueAtTime(0.17, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.24); osc.connect(g); g.connect(a.destination); osc.start(t); osc.stop(t + 0.27); }); }
-    function sfxMenuClick() { const a = getSfx(), now = a.currentTime, osc = a.createOscillator(), g = a.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(400, now); osc.frequency.exponentialRampToValueAtTime(600, now + 0.06); g.gain.setValueAtTime(0.1, now); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.08); osc.connect(g); g.connect(a.destination); osc.start(now); osc.stop(now + 0.09); }
-    function sfxDiscThrow() { const a = getSfx(), now = a.currentTime, osc = a.createOscillator(), g = a.createGain(); osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, now); osc.frequency.exponentialRampToValueAtTime(900, now + 0.12); g.gain.setValueAtTime(0.2, now); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.15); osc.connect(g); g.connect(a.destination); osc.start(now); osc.stop(now + 0.17); }
-    function sfxDiscBounce() { const a = getSfx(), now = a.currentTime, osc = a.createOscillator(), g = a.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(500, now); osc.frequency.exponentialRampToValueAtTime(250, now + 0.08); g.gain.setValueAtTime(0.1, now); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.09); osc.connect(g); g.connect(a.destination); osc.start(now); osc.stop(now + 0.1); }
-    function sfxDiscCatch() { const a = getSfx(), now = a.currentTime;[600, 800, 1000].forEach((f, i) => { const osc = a.createOscillator(), g = a.createGain(), t = now + i * 0.05; osc.type = 'sine'; osc.frequency.value = f; g.gain.setValueAtTime(0.14, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.1); osc.connect(g); g.connect(a.destination); osc.start(t); osc.stop(t + 0.12); }); }
-
-    // ── ESTADO MENÚ ──────────────────────────────────────────────────────────────
+    function sfxEngine(i) { const a = getSfx(), n = a.currentTime, o = a.createOscillator(), g = a.createGain(); o.type = 'square'; o.frequency.value = i === 0 ? 440 : 290; g.gain.setValueAtTime(0.06, n); g.gain.exponentialRampToValueAtTime(0.0001, n + 0.045); o.connect(g); g.connect(a.destination); o.start(n); o.stop(n + 0.05); }
+    function sfxTurn() { const a = getSfx(), n = a.currentTime, o = a.createOscillator(), g = a.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(700, n); o.frequency.exponentialRampToValueAtTime(200, n + 0.09); g.gain.setValueAtTime(0.13, n); g.gain.exponentialRampToValueAtTime(0.0001, n + 0.1); o.connect(g); g.connect(a.destination); o.start(n); o.stop(n + 0.11); }
+    function sfxCrash() { const a = getSfx(), n = a.currentTime; const buf = a.createBuffer(1, a.sampleRate * 0.55, a.sampleRate), d = buf.getChannelData(0); for (let i = 0; i < d.length; i++)d[i] = Math.random() * 2 - 1; const src = a.createBufferSource(); src.buffer = buf; const flt = a.createBiquadFilter(); flt.type = 'lowpass'; flt.frequency.value = 900; const g1 = a.createGain(); g1.gain.setValueAtTime(0.9, n); g1.gain.exponentialRampToValueAtTime(0.0001, n + 0.5); src.connect(flt); flt.connect(g1); g1.connect(a.destination); src.start(n); src.stop(n + 0.55); const o2 = a.createOscillator(), g2 = a.createGain(); o2.type = 'sawtooth'; o2.frequency.setValueAtTime(280, n); o2.frequency.exponentialRampToValueAtTime(35, n + 0.45); g2.gain.setValueAtTime(0.4, n); g2.gain.exponentialRampToValueAtTime(0.0001, n + 0.45); o2.connect(g2); g2.connect(a.destination); o2.start(n); o2.stop(n + 0.5); }
+    function sfxPowerUp(t) { const a = getSfx(), n = a.currentTime, fr = t === 'speed' ? [400, 600, 900, 1200] : [300, 450, 600]; fr.forEach((f, i) => { const o = a.createOscillator(), g = a.createGain(), tt = n + i * 0.07; o.type = 'sine'; o.frequency.value = f; g.gain.setValueAtTime(0.22, tt); g.gain.exponentialRampToValueAtTime(0.0001, tt + 0.14); o.connect(g); g.connect(a.destination); o.start(tt); o.stop(tt + 0.16); }); }
+    function sfxWin() { const a = getSfx(), n = a.currentTime;[523, 659, 784, 1047].forEach((f, i) => { const o = a.createOscillator(), g = a.createGain(), t = n + i * 0.14; o.type = 'square'; o.frequency.value = f; g.gain.setValueAtTime(0.17, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.24); o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + 0.27); }); }
+    function sfxMenuClick() { const a = getSfx(), n = a.currentTime, o = a.createOscillator(), g = a.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(400, n); o.frequency.exponentialRampToValueAtTime(600, n + 0.06); g.gain.setValueAtTime(0.1, n); g.gain.exponentialRampToValueAtTime(0.0001, n + 0.08); o.connect(g); g.connect(a.destination); o.start(n); o.stop(n + 0.09); }
+    function sfxThrow() { const a = getSfx(), n = a.currentTime, o = a.createOscillator(), g = a.createGain(); o.type = 'sawtooth'; o.frequency.setValueAtTime(200, n); o.frequency.exponentialRampToValueAtTime(900, n + 0.12); g.gain.setValueAtTime(0.2, n); g.gain.exponentialRampToValueAtTime(0.0001, n + 0.15); o.connect(g); g.connect(a.destination); o.start(n); o.stop(n + 0.16); }
+    function sfxBounce() { const a = getSfx(), n = a.currentTime, o = a.createOscillator(), g = a.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(600, n); o.frequency.exponentialRampToValueAtTime(180, n + 0.07); g.gain.setValueAtTime(0.09, n); g.gain.exponentialRampToValueAtTime(0.0001, n + 0.08); o.connect(g); g.connect(a.destination); o.start(n); o.stop(n + 0.09); }
+    function sfxCatch() { const a = getSfx(), n = a.currentTime;[500, 700, 1000].forEach((f, i) => { const o = a.createOscillator(), g = a.createGain(), t = n + i * 0.05; o.type = 'sine'; o.frequency.value = f; g.gain.setValueAtTime(0.14, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.09); o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + 0.1); }); }
+    function sfxHit() { const a = getSfx(), n = a.currentTime; const buf = a.createBuffer(1, a.sampleRate * 0.3, a.sampleRate), d = buf.getChannelData(0); for (let i = 0; i < d.length; i++)d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (a.sampleRate * 0.05)); const src = a.createBufferSource(); src.buffer = buf; const g = a.createGain(); g.gain.setValueAtTime(0.55, n); g.gain.exponentialRampToValueAtTime(0.0001, n + 0.28); src.connect(g); g.connect(a.destination); src.start(n); src.stop(n + 0.3); }
     let selectedMode = 'classic', selectedPlayers = 2;
     function selectMode(m) { getSfx(); sfxMenuClick(); selectedMode = m;['classic', 'infinite', 'discs'].forEach(id => document.getElementById('card-' + id).classList.toggle('selected', id === m)); }
     function selectPlayers(n) { getSfx(); sfxMenuClick(); selectedPlayers = n; document.getElementById('card-1p').classList.toggle('selected', n === 1); document.getElementById('card-2p').classList.toggle('selected', n === 2); }
     function showMenu() { getSfx(); document.getElementById('coin-screen').style.display = 'none'; document.getElementById('menu-screen').style.display = 'flex'; document.getElementById('ov-winner').style.display = 'none'; playMusic(); }
     function showCoin() { document.getElementById('coin-screen').style.display = 'block'; document.getElementById('menu-screen').style.display = 'none'; }
-
-    // ── CANVAS ───────────────────────────────────────────────────────────────────
     const canvas = document.getElementById('c'), ctx = canvas.getContext('2d');
     let W, H, COLS, ROWS, CELL, OFFSET_Y;
     const HEADER = 32, DPAD_W = 175;
-    function resize() { W = window.innerWidth; H = window.innerHeight; canvas.width = W; canvas.height = H; const availW = W - DPAD_W * 2, availH = H - HEADER; CELL = Math.floor(Math.min(availW, availH) / 36); COLS = Math.floor(availW / CELL); ROWS = Math.floor(availH / CELL); OFFSET_Y = HEADER + Math.floor((availH - ROWS * CELL) / 2); }
+    function resize() { W = innerWidth; H = innerHeight; canvas.width = W; canvas.height = H; const aw = W - DPAD_W * 2, ah = H - HEADER; CELL = Math.floor(Math.min(aw, ah) / 36); COLS = Math.floor(aw / CELL); ROWS = Math.floor(ah / CELL); OFFSET_Y = HEADER + Math.floor((ah - ROWS * CELL) / 2); }
     resize();
     window.addEventListener('resize', () => { resize(); if (!running) drawBg(); });
-
     let running = false, gameLoop = null, grid = [], players = [], powerUps = [], frameCount = 0, hiscore = 0;
     let engineTick = [0, 0], currentMode = 'classic', currentPlayers = 2;
     const PU_RADIUS = 3;
     const PC_2P = [{ main: '#ffe050', glow: '#ffcc00', dark: '#665500' }, { main: '#00d4ff', glow: '#00aaff', dark: '#004466' }];
     const PC_CPU = [{ main: '#00d4ff', glow: '#00aaff', dark: '#004466' }, { main: '#ff6a00', glow: '#ff4400', dark: '#662200' }];
     let PC = PC_2P;
-
     function initGrid() { grid = Array.from({ length: ROWS }, () => new Array(COLS).fill(0)); }
     function createPlayers() { const mg = Math.floor(COLS / 5); players = [{ x: mg, y: Math.floor(ROWS / 2), dx: 1, dy: 0, trail: [], trailLength: currentMode === 'infinite' ? 9999 : 5, speedBoost: 0, alive: true, wins: 0, score: 0, isAI: false }, { x: COLS - mg - 1, y: Math.floor(ROWS / 2), dx: -1, dy: 0, trail: [], trailLength: currentMode === 'infinite' ? 9999 : 5, speedBoost: 0, alive: true, wins: 0, score: 0, isAI: currentPlayers === 1 }]; }
-    function spawnPowerUp() { const types = ['trail', 'trail', 'speed']; const type = types[Math.floor(Math.random() * types.length)]; let px, py, att = 0; do { px = 4 + Math.floor(Math.random() * (COLS - 8)); py = 4 + Math.floor(Math.random() * (ROWS - 8)); att++; } while (grid[py][px] !== 0 && att < 40); if (att < 40) powerUps.push({ x: px, y: py, type, born: frameCount }); }
+    function spawnPU() { const types = ['trail', 'trail', 'speed']; const type = types[Math.floor(Math.random() * types.length)]; let px, py, att = 0; do { px = 4 + Math.floor(Math.random() * (COLS - 8)); py = 4 + Math.floor(Math.random() * (ROWS - 8)); att++; } while (grid[py][px] !== 0 && att < 40); if (att < 40) powerUps.push({ x: px, y: py, type, born: frameCount }); }
     function arenaX() { return DPAD_W + Math.floor((W - DPAD_W * 2 - COLS * CELL) / 2); }
-
-    function aiMove(p, opp) { const dirs = [{ dx: p.dx, dy: p.dy }, { dx: -p.dy, dy: p.dx }, { dx: p.dy, dy: -p.dx }]; let best = -1, bd = dirs[0]; for (const d of dirs) { const nx = p.x + d.dx, ny = p.y + d.dy; if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS || grid[ny][nx] !== 0) continue; const sp = floodFill(nx, ny, 18); const dist = Math.abs(nx - opp.x) + Math.abs(ny - opp.y); const sc = sp + (dist < 4 ? -8 : 0) + (Math.random() - 0.5) * 6; if (sc > best) { best = sc; bd = d; } } if (bd.dx !== 0 && p.dx !== 0) return; if (bd.dy !== 0 && p.dy !== 0) return; p.dx = bd.dx; p.dy = bd.dy; }
+    function aiMove(p, opp) { const dirs = [{ dx: p.dx, dy: p.dy }, { dx: -p.dy, dy: p.dx }, { dx: p.dy, dy: -p.dx }]; let best = -1, bd = dirs[0]; for (const d of dirs) { const nx = p.x + d.dx, ny = p.y + d.dy; if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS || grid[ny][nx] !== 0) continue; const sp = floodFill(nx, ny, 18); const sc = sp + (Math.abs(nx - opp.x) + Math.abs(ny - opp.y) < 4 ? -8 : 0) + (Math.random() - 0.5) * 6; if (sc > best) { best = sc; bd = d; } } if (bd.dx !== 0 && p.dx !== 0) return; if (bd.dy !== 0 && p.dy !== 0) return; p.dx = bd.dx; p.dy = bd.dy; }
     function floodFill(sx, sy, md) { let c = 0; const st = [{ x: sx, y: sy, d: 0 }], v = new Set(); v.add(sx + ',' + sy); while (st.length && c < md * md) { const { x, y, d } = st.pop(); c++; if (d >= md) continue; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const nx = x + dx, ny = y + dy; if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS || grid[ny][nx] !== 0) continue; const k = nx + ',' + ny; if (v.has(k)) continue; v.add(k); st.push({ x: nx, y: ny, d: d + 1 }); } } return c; }
+    function drawBg() { ctx.fillStyle = '#000d1f'; ctx.fillRect(0, 0, W, H); const ax = arenaX(); ctx.fillStyle = '#000e22'; ctx.fillRect(ax, OFFSET_Y, COLS * CELL, ROWS * CELL); ctx.strokeStyle = 'rgba(0,80,160,0.28)'; ctx.lineWidth = 0.7; for (let r = 0; r <= ROWS; r++) { const y = OFFSET_Y + r * CELL; ctx.beginPath(); ctx.moveTo(ax, y); ctx.lineTo(ax + COLS * CELL, y); ctx.stroke(); } for (let c2 = 0; c2 <= COLS; c2++) { const x = ax + c2 * CELL; ctx.beginPath(); ctx.moveTo(x, OFFSET_Y); ctx.lineTo(x, OFFSET_Y + ROWS * CELL); ctx.stroke(); } ctx.strokeStyle = 'rgba(0,160,220,0.35)'; ctx.lineWidth = 1.5; ctx.strokeRect(ax, OFFSET_Y, COLS * CELL, ROWS * CELL); }
+    function toSc(gx, gy) { const ax = arenaX(); return { x: ax + gx * CELL + CELL / 2, y: OFFSET_Y + gy * CELL + CELL / 2 }; }
+    function drawTP(p) { if (p.trail.length < 2) return; const ax = arenaX(), h2 = CELL / 2; ctx.beginPath(); ctx.moveTo(ax + p.trail[0].x * CELL + h2, OFFSET_Y + p.trail[0].y * CELL + h2); for (let i = 1; i < p.trail.length; i++)ctx.lineTo(ax + p.trail[i].x * CELL + h2, OFFSET_Y + p.trail[i].y * CELL + h2); ctx.lineTo(ax + p.x * CELL + h2, OFFSET_Y + p.y * CELL + h2); ctx.stroke(); }
+    function drawTrails() { players.forEach((p, idx) => { if (p.trail.length < 2) return; const pc = PC[idx]; ctx.lineCap = 'square'; ctx.strokeStyle = pc.glow; ctx.lineWidth = CELL * 0.55; ctx.globalAlpha = 0.12; drawTP(p); ctx.lineWidth = CELL * 0.35; ctx.globalAlpha = 0.22; drawTP(p); ctx.strokeStyle = pc.main; ctx.lineWidth = Math.max(1.5, CELL * 0.2); ctx.globalAlpha = 1; drawTP(p); ctx.globalAlpha = 1; }); }
+    function drawBike(p, idx) { if (!p.alive) return; const pc = PC[idx]; const pos = toSc(p.x, p.y); const angle = Math.atan2(p.dy, p.dx); const s = CELL * 1.7; ctx.save(); ctx.translate(pos.x, pos.y); ctx.rotate(angle + Math.PI / 2); ctx.shadowColor = pc.glow; ctx.shadowBlur = 14; const w = s * 0.32, h = s * 0.72, wr = s * 0.18, ww = s * 0.1, fy = -h * 0.38, by = h * 0.38; ctx.strokeStyle = pc.main; ctx.lineWidth = ww; ctx.globalAlpha = 0.9; ctx.beginPath(); ctx.arc(0, by, wr, 0, Math.PI * 2); ctx.stroke(); ctx.lineWidth = 1.5; ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.arc(0, by, wr * 0.55, 0, Math.PI * 2); ctx.stroke(); ctx.lineWidth = ww; ctx.globalAlpha = 0.9; ctx.beginPath(); ctx.arc(0, fy, wr, 0, Math.PI * 2); ctx.stroke(); ctx.lineWidth = 1.5; ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.arc(0, fy, wr * 0.55, 0, Math.PI * 2); ctx.stroke(); ctx.globalAlpha = 1; const tw = w * 0.55; ctx.strokeStyle = pc.main; ctx.fillStyle = pc.dark; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(-tw / 2, fy + wr * 0.8); ctx.lineTo(tw / 2, fy + wr * 0.8); ctx.lineTo(w / 2, by - wr * 0.8); ctx.lineTo(-w / 2, by - wr * 0.8); ctx.closePath(); ctx.fill(); ctx.stroke(); const ch = h * 0.22, cw = w * 0.7; ctx.fillStyle = 'rgba(0,0,0,0.75)'; ctx.strokeStyle = pc.main; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(-cw / 2, fy + wr * 1.1); ctx.lineTo(cw / 2, fy + wr * 1.1); ctx.lineTo(cw * 0.35, fy + wr * 1.1 + ch); ctx.lineTo(-cw * 0.35, fy + wr * 1.1 + ch); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.fillStyle = pc.main; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.moveTo(-cw * 0.28, fy + wr * 1.15); ctx.lineTo(cw * 0.28, fy + wr * 1.15); ctx.lineTo(cw * 0.18, fy + wr * 1.15 + ch * 0.55); ctx.lineTo(-cw * 0.18, fy + wr * 1.15 + ch * 0.55); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = pc.main; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.moveTo(-w / 2, by - wr * 0.8); ctx.lineTo(-tw / 2 * 0.8, 0); ctx.lineTo(-cw / 2 * 0.9, fy + wr * 1.0); ctx.stroke(); ctx.beginPath(); ctx.moveTo(w / 2, by - wr * 0.8); ctx.lineTo(tw / 2 * 0.8, 0); ctx.lineTo(cw / 2 * 0.9, fy + wr * 1.0); ctx.stroke(); ctx.globalAlpha = 1; ctx.fillStyle = '#fff'; ctx.shadowColor = pc.glow; ctx.shadowBlur = 16; ctx.globalAlpha = 0.95; ctx.beginPath(); ctx.ellipse(0, fy - wr * 0.7, s * 0.06, s * 0.025, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1; if (p.speedBoost > 0) { const fl = s * 0.28; const gr = ctx.createLinearGradient(0, by + wr * 0.5, 0, by + wr * 0.5 + fl); gr.addColorStop(0, 'rgba(255,255,180,0.95)'); gr.addColorStop(0.5, 'rgba(255,140,0,0.7)'); gr.addColorStop(1, 'rgba(255,60,0,0)'); ctx.fillStyle = gr; ctx.shadowColor = '#ffaa00'; ctx.shadowBlur = 20; ctx.beginPath(); ctx.moveTo(-s * 0.07, by + wr * 0.5); ctx.lineTo(s * 0.07, by + wr * 0.5); ctx.lineTo(s * 0.02, by + wr * 0.5 + fl); ctx.lineTo(-s * 0.02, by + wr * 0.5 + fl); ctx.closePath(); ctx.fill(); } if (p.isAI) { ctx.restore(); ctx.save(); ctx.translate(pos.x, pos.y); ctx.font = 'bold ' + Math.max(8, CELL * 0.55) + 'px Courier New'; ctx.fillStyle = 'rgba(255,106,0,0.9)'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('CPU', 0, -CELL * 1.4); } ctx.shadowBlur = 0; ctx.restore(); }
+    function drawPUs() { const ax = arenaX(), t = frameCount / 30; powerUps.forEach(pu => { const cx = ax + pu.x * CELL + CELL / 2, cy = OFFSET_Y + pu.y * CELL + CELL / 2; const pulse = 0.7 + 0.3 * Math.sin(t * 2 + pu.x), r = CELL * 1.8 * pulse; if (pu.type === 'trail') { ctx.shadowColor = '#cc00ff'; ctx.shadowBlur = 18; ctx.strokeStyle = 'rgba(200,0,255,' + (0.6 * pulse) + ')'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke(); ctx.strokeStyle = 'rgba(220,80,255,' + (0.9 * pulse) + ')'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, r * 0.6, 0, Math.PI * 2); ctx.stroke(); ctx.fillStyle = 'rgba(230,120,255,' + (0.95 * pulse) + ')'; ctx.font = 'bold ' + Math.floor(CELL * 1.1) + 'px Courier New'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('+', cx, cy); } else { ctx.shadowColor = '#00ff88'; ctx.shadowBlur = 18; ctx.strokeStyle = 'rgba(0,255,130,' + (0.7 * pulse) + ')'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(cx, cy - r); ctx.lineTo(cx + r * 0.7, cy); ctx.lineTo(cx, cy + r); ctx.lineTo(cx - r * 0.7, cy); ctx.closePath(); ctx.stroke(); ctx.fillStyle = 'rgba(0,255,130,' + (0.18 * pulse) + ')'; ctx.fill(); ctx.fillStyle = 'rgba(0,255,130,' + (0.95 * pulse) + ')'; ctx.font = 'bold ' + Math.floor(CELL * 1.1) + 'px Courier New'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('\u26a1', cx, cy); } ctx.shadowBlur = 0; }); }
+    function updateHUD() { if (currentMode === 'discs' && dPlayers.length) { const h1v = document.getElementById('h1v'), h2v = document.getElementById('h2v'); let h1 = '', h2 = ''; for (let i = 0; i < LIVES; i++) { h1 += i < dPlayers[0].lives ? '\u2665' : '\u25a1'; } for (let i = 0; i < LIVES; i++) { h2 += i < dPlayers[1].lives ? '\u2665' : '\u25a1'; } h1v.textContent = h1; h2v.textContent = h2; h1v.style.color = '#00d4ff'; h1v.style.textShadow = '0 0 8px #00d4ff'; const c2 = currentPlayers === 1 ? '#ff6a00' : '#ffe050'; h2v.style.color = c2; h2v.style.textShadow = '0 0 8px ' + c2; document.getElementById('hisv').textContent = 'DISC'; document.getElementById('ind1').textContent = dPlayers[0].hasDisc ? 'DISC' : '...'; document.getElementById('ind2').textContent = dPlayers[1].hasDisc ? 'DISC' : '...'; } else if (players.length) { hiscore = Math.max(hiscore, players[0].score, players[1].score); document.getElementById('h1v').textContent = String(players[0].score).padStart(4, '0'); document.getElementById('h2v').textContent = String(players[1].score).padStart(4, '0'); document.getElementById('hisv').textContent = String(hiscore).padStart(4, '0'); const h1v = document.getElementById('h1v'), h2v = document.getElementById('h2v'); h1v.style.color = PC[0].main; h1v.style.textShadow = '0 0 8px ' + PC[0].main; h2v.style.color = PC[1].main; h2v.style.textShadow = '0 0 8px ' + PC[1].main; if (currentMode === 'classic') { document.getElementById('ind1').textContent = players[0].trailLength + (players[0].speedBoost > 0 ? ' boost' : ''); document.getElementById('ind2').textContent = players[1].trailLength + (players[1].speedBoost > 0 ? ' boost' : ''); } else { document.getElementById('ind1').textContent = 'INF'; document.getElementById('ind2').textContent = 'INF'; } } }
+    function updatePlayer(p, idx) { if (!p.alive) return; const spd = p.speedBoost > 0 ? 4 : 6; if (frameCount % spd !== 0) return; if (p.speedBoost > 0) p.speedBoost--; if (p.isAI) aiMove(p, players[idx === 0 ? 1 : 0]); const nx = p.x + p.dx, ny = p.y + p.dy; if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS) { p.alive = false; sfxCrash(); return; } if (grid[ny][nx] !== 0) { p.alive = false; sfxCrash(); return; } grid[p.y][p.x] = idx + 1; p.trail.push({ x: p.x, y: p.y }); if (currentMode === 'classic') { while (p.trail.length > p.trailLength) { const old = p.trail.shift(); if (grid[old.y][old.x] === idx + 1) grid[old.y][old.x] = 0; } } p.x = nx; p.y = ny; p.score += 1; engineTick[idx]++; if (engineTick[idx] % 2 === 0) sfxEngine(idx); if (currentMode === 'classic') { for (let i = powerUps.length - 1; i >= 0; i--) { const pu = powerUps[i]; if (Math.abs(pu.x - p.x) + Math.abs(pu.y - p.y) <= PU_RADIUS) { if (pu.type === 'trail') { p.trailLength = Math.min(p.trailLength + 5, 80); p.score += 50; } else { p.speedBoost = 100; p.score += 30; } sfxPowerUp(pu.type); powerUps.splice(i, 1); } } } }
+    function gameStep() { frameCount++; updatePlayer(players[0], 0); updatePlayer(players[1], 1); if (currentMode === 'classic' && frameCount % 85 === 0 && powerUps.length < 5) spawnPU(); drawBg(); drawTrails(); if (currentMode === 'classic') drawPUs(); drawBike(players[0], 0); drawBike(players[1], 1); updateHUD(); const a1 = players[0].alive, a2 = players[1].alive; if (!a1 || !a2) { running = false; cancelAnimationFrame(gameLoop); setTimeout(() => showResult(a1, a2), 400); return; } gameLoop = requestAnimationFrame(gameStep); }
 
-    // ── DIBUJADO MOTOS ────────────────────────────────────────────────────────────
-    function drawBg() { ctx.fillStyle = '#000d1f'; ctx.fillRect(0, 0, W, H); const ax = arenaX(); ctx.fillStyle = '#000e22'; ctx.fillRect(ax, OFFSET_Y, COLS * CELL, ROWS * CELL); ctx.strokeStyle = 'rgba(0,80,160,0.28)'; ctx.lineWidth = 0.7; for (let r = 0; r <= ROWS; r++) { const y = OFFSET_Y + r * CELL; ctx.beginPath(); ctx.moveTo(ax, y); ctx.lineTo(ax + COLS * CELL, y); ctx.stroke(); } for (let c = 0; c <= COLS; c++) { const x = ax + c * CELL; ctx.beginPath(); ctx.moveTo(x, OFFSET_Y); ctx.lineTo(x, OFFSET_Y + ROWS * CELL); ctx.stroke(); } ctx.strokeStyle = 'rgba(0,160,220,0.35)'; ctx.lineWidth = 1.5; ctx.strokeRect(ax, OFFSET_Y, COLS * CELL, ROWS * CELL); }
-    function toScreen(gx, gy) { const ax = arenaX(); return { x: ax + gx * CELL + CELL / 2, y: OFFSET_Y + gy * CELL + CELL / 2 }; }
-    function drawTrailPath(p) { if (p.trail.length < 2) return; const ax = arenaX(), half = CELL / 2; ctx.beginPath(); ctx.moveTo(ax + p.trail[0].x * CELL + half, OFFSET_Y + p.trail[0].y * CELL + half); for (let i = 1; i < p.trail.length; i++)ctx.lineTo(ax + p.trail[i].x * CELL + half, OFFSET_Y + p.trail[i].y * CELL + half); ctx.lineTo(ax + p.x * CELL + half, OFFSET_Y + p.y * CELL + half); ctx.stroke(); }
-    function drawTrails() { players.forEach((p, idx) => { if (p.trail.length < 2) return; const pc = PC[idx]; ctx.lineCap = 'square'; ctx.strokeStyle = pc.glow; ctx.lineWidth = CELL * 0.55; ctx.globalAlpha = 0.12; drawTrailPath(p); ctx.lineWidth = CELL * 0.35; ctx.globalAlpha = 0.22; drawTrailPath(p); ctx.strokeStyle = pc.main; ctx.lineWidth = Math.max(1.5, CELL * 0.2); ctx.globalAlpha = 1; drawTrailPath(p); ctx.globalAlpha = 1; }); }
-    function drawBike(p, idx) { if (!p.alive) return; const pc = PC[idx]; const pos = toScreen(p.x, p.y); const angle = Math.atan2(p.dy, p.dx); const s = CELL * 1.7; ctx.save(); ctx.translate(pos.x, pos.y); ctx.rotate(angle + Math.PI / 2); ctx.shadowColor = pc.glow; ctx.shadowBlur = 14; const w = s * 0.32, h = s * 0.72, wr = s * 0.18, ww = s * 0.1, fy = -h * 0.38, by = h * 0.38; ctx.strokeStyle = pc.main; ctx.lineWidth = ww; ctx.globalAlpha = 0.9; ctx.beginPath(); ctx.arc(0, by, wr, 0, Math.PI * 2); ctx.stroke(); ctx.lineWidth = 1.5; ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.arc(0, by, wr * 0.55, 0, Math.PI * 2); ctx.stroke(); ctx.lineWidth = ww; ctx.globalAlpha = 0.9; ctx.beginPath(); ctx.arc(0, fy, wr, 0, Math.PI * 2); ctx.stroke(); ctx.lineWidth = 1.5; ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.arc(0, fy, wr * 0.55, 0, Math.PI * 2); ctx.stroke(); ctx.globalAlpha = 1; const tw = w * 0.55; ctx.strokeStyle = pc.main; ctx.fillStyle = pc.dark; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(-tw / 2, fy + wr * 0.8); ctx.lineTo(tw / 2, fy + wr * 0.8); ctx.lineTo(w / 2, by - wr * 0.8); ctx.lineTo(-w / 2, by - wr * 0.8); ctx.closePath(); ctx.fill(); ctx.stroke(); const ch = h * 0.22, cw = w * 0.7; ctx.fillStyle = 'rgba(0,0,0,0.75)'; ctx.strokeStyle = pc.main; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(-cw / 2, fy + wr * 1.1); ctx.lineTo(cw / 2, fy + wr * 1.1); ctx.lineTo(cw * 0.35, fy + wr * 1.1 + ch); ctx.lineTo(-cw * 0.35, fy + wr * 1.1 + ch); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.fillStyle = pc.main; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.moveTo(-cw * 0.28, fy + wr * 1.15); ctx.lineTo(cw * 0.28, fy + wr * 1.15); ctx.lineTo(cw * 0.18, fy + wr * 1.15 + ch * 0.55); ctx.lineTo(-cw * 0.18, fy + wr * 1.15 + ch * 0.55); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = pc.main; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.moveTo(-w / 2, by - wr * 0.8); ctx.lineTo(-tw / 2 * 0.8, 0); ctx.lineTo(-cw / 2 * 0.9, fy + wr * 1.0); ctx.stroke(); ctx.beginPath(); ctx.moveTo(w / 2, by - wr * 0.8); ctx.lineTo(tw / 2 * 0.8, 0); ctx.lineTo(cw / 2 * 0.9, fy + wr * 1.0); ctx.stroke(); ctx.globalAlpha = 1; ctx.fillStyle = '#fff'; ctx.shadowColor = pc.glow; ctx.shadowBlur = 16; ctx.globalAlpha = 0.95; ctx.beginPath(); ctx.ellipse(0, fy - wr * 0.7, s * 0.06, s * 0.025, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1; if (p.speedBoost > 0) { const fl = s * 0.28; const gr = ctx.createLinearGradient(0, by + wr * 0.5, 0, by + wr * 0.5 + fl); gr.addColorStop(0, 'rgba(255,255,180,0.95)'); gr.addColorStop(0.5, 'rgba(255,140,0,0.7)'); gr.addColorStop(1, 'rgba(255,60,0,0)'); ctx.fillStyle = gr; ctx.shadowColor = '#ffaa00'; ctx.shadowBlur = 20; ctx.beginPath(); ctx.moveTo(-s * 0.07, by + wr * 0.5); ctx.lineTo(s * 0.07, by + wr * 0.5); ctx.lineTo(s * 0.02, by + wr * 0.5 + fl); ctx.lineTo(-s * 0.02, by + wr * 0.5 + fl); ctx.closePath(); ctx.fill(); } if (p.isAI) { ctx.restore(); ctx.save(); ctx.translate(pos.x, pos.y); ctx.font = `bold ${Math.max(8, CELL * 0.55)}px 'Courier New'`; ctx.fillStyle = 'rgba(255,106,0,0.9)'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('CPU', 0, -CELL * 1.4); } ctx.shadowBlur = 0; ctx.restore(); }
-    function drawPowerUps() { const ax = arenaX(), t = frameCount / 30; powerUps.forEach(pu => { const cx = ax + pu.x * CELL + CELL / 2, cy = OFFSET_Y + pu.y * CELL + CELL / 2; const pulse = 0.7 + 0.3 * Math.sin(t * 2 + pu.x), r = CELL * 1.8 * pulse; if (pu.type === 'trail') { ctx.shadowColor = '#cc00ff'; ctx.shadowBlur = 18; ctx.strokeStyle = `rgba(200,0,255,${0.6 * pulse})`; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke(); ctx.strokeStyle = `rgba(220,80,255,${0.9 * pulse})`; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, r * 0.6, 0, Math.PI * 2); ctx.stroke(); ctx.fillStyle = `rgba(230,120,255,${0.95 * pulse})`; ctx.font = `bold ${Math.floor(CELL * 1.1)}px 'Courier New'`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('+', cx, cy); } else { ctx.shadowColor = '#00ff88'; ctx.shadowBlur = 18; ctx.strokeStyle = `rgba(0,255,130,${0.7 * pulse})`; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(cx, cy - r); ctx.lineTo(cx + r * 0.7, cy); ctx.lineTo(cx, cy + r); ctx.lineTo(cx - r * 0.7, cy); ctx.closePath(); ctx.stroke(); ctx.fillStyle = `rgba(0,255,130,${0.18 * pulse})`; ctx.fill(); ctx.fillStyle = `rgba(0,255,130,${0.95 * pulse})`; ctx.font = `bold ${Math.floor(CELL * 1.1)}px 'Courier New'`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('⚡', cx, cy); } ctx.shadowBlur = 0; }); }
+    // ===== DISC MODE =====
+    const LIVES = 3, DISC_SPD = 5.0, PLR_SPD = 2.9, PLR_R = 22, DISC_R = 13, CATCH_CD = 28;
+    let dPlayers = [], dDisc = null;
+    const inp = [{ mx: 0, my: 0, ax: 0, ay: 0, pa: 0 }, { mx: 0, my: 0, ax: 0, ay: 0, pa: 0 }];
 
-    function updateHUD() {
-      hiscore = Math.max(hiscore, players[0]?.score || 0, players[1]?.score || 0);
-      if (currentMode === 'discs' && discState.length) {
-        document.getElementById('h1v').textContent = String(discState[0].lives).padStart(4, '0');
-        document.getElementById('h2v').textContent = String(discState[1].lives).padStart(4, '0');
-        document.getElementById('ind1').textContent = discState[0].hasDisc ? '⬟ DISC' : '·····';
-        document.getElementById('ind2').textContent = discState[1].hasDisc ? 'DISC ⬟' : '·····';
-      } else if (players.length) {
-        document.getElementById('h1v').textContent = String(players[0].score).padStart(4, '0');
-        document.getElementById('h2v').textContent = String(players[1].score).padStart(4, '0');
-        document.getElementById('hisv').textContent = String(hiscore).padStart(4, '0');
-        if (currentMode === 'classic') { document.getElementById('ind1').textContent = `▬ ${players[0].trailLength}${players[0].speedBoost > 0 ? ' ⚡' : ''}`; document.getElementById('ind2').textContent = `${players[1].trailLength} ▬${players[1].speedBoost > 0 ? ' ⚡' : ''}`; }
-        else { document.getElementById('ind1').textContent = '∞ TRAIL'; document.getElementById('ind2').textContent = 'TRAIL ∞'; }
-      }
-      if (players.length) { const h1v = document.getElementById('h1v'), h2v = document.getElementById('h2v'); h1v.style.color = PC[0].main; h1v.style.textShadow = `0 0 8px ${PC[0].main}`; h2v.style.color = PC[1].main; h2v.style.textShadow = `0 0 8px ${PC[1].main}`; }
-    }
+    function discArena() { const pad = 10, top = HEADER + pad, bot = H - 6, mid = W / 2; return { pad, top, bot, mid, q: [{ x: pad, y: top, w: mid - pad, h: bot - top }, { x: mid, y: top, w: W - pad - mid, h: bot - top }] }; }
+    function initDiscMode() { const a = discArena(); dPlayers = [{ x: a.q[0].x + a.q[0].w * 0.5, y: a.q[0].y + a.q[0].h * 0.5, hasDisc: true, catchCd: 0, lives: LIVES, isAI: false }, { x: a.q[1].x + a.q[1].w * 0.5, y: a.q[1].y + a.q[1].h * 0.5, hasDisc: false, catchCd: 0, lives: LIVES, isAI: currentPlayers === 1 }]; dDisc = null; }
 
-    function updatePlayer(p, idx) { if (!p.alive) return; const spd = p.speedBoost > 0 ? 4 : 6; if (frameCount % spd !== 0) return; if (p.speedBoost > 0) p.speedBoost--; if (p.isAI) aiMove(p, players[idx === 0 ? 1 : 0]); const nx = p.x + p.dx, ny = p.y + p.dy; if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS) { p.alive = false; sfxCrash(); return; } if (grid[ny][nx] !== 0) { p.alive = false; sfxCrash(); return; } grid[p.y][p.x] = idx + 1; p.trail.push({ x: p.x, y: p.y }); if (currentMode === 'classic') { while (p.trail.length > p.trailLength) { const old = p.trail.shift(); if (grid[old.y][old.x] === idx + 1) grid[old.y][old.x] = 0; } } p.x = nx; p.y = ny; p.score += 1; engineTick[idx]++; if (engineTick[idx] % 2 === 0) sfxEngine(idx); if (currentMode === 'classic') { for (let i = powerUps.length - 1; i >= 0; i--) { const pu = powerUps[i]; const dist = Math.abs(pu.x - p.x) + Math.abs(pu.y - p.y); if (dist <= PU_RADIUS) { if (pu.type === 'trail') { p.trailLength = Math.min(p.trailLength + 5, 80); p.score += 50; } else { p.speedBoost = 100; p.score += 30; } sfxPowerUp(pu.type); powerUps.splice(i, 1); } } } }
-
-    function gameStep() { frameCount++; updatePlayer(players[0], 0); updatePlayer(players[1], 1); if (currentMode === 'classic' && frameCount % 85 === 0 && powerUps.length < 5) spawnPowerUp(); drawBg(); drawTrails(); if (currentMode === 'classic') drawPowerUps(); drawBike(players[0], 0); drawBike(players[1], 1); updateHUD(); const a1 = players[0].alive, a2 = players[1].alive; if (!a1 || !a2) { running = false; cancelAnimationFrame(gameLoop); setTimeout(() => showResult(a1, a2), 400); return; } gameLoop = requestAnimationFrame(gameStep); }
-
-    // ══════════════════════════════════════════════════════════════════════════════
-    // ── MODO DISCOS ───────────────────────────────────────────────────────────────
-    // ══════════════════════════════════════════════════════════════════════════════
-    const DISC_SPD = 4.5, PLAYER_SPD = 2.6, PLAYER_R = 20, DISC_R = 11, LIVES = 3;
-    let discState = [], discs = [];
-
-    // Joystick inputs (objetos mutables para sincronizar desde event listeners)
-    const jsMv1 = { x: 0, y: 0 }, jsAm1 = { x: 0, y: 0 };
-    const jsMv2 = { x: 0, y: 0 }, jsAm2 = { x: 0, y: 0 };
-
-    function discArena() {
-      const pad = 8, top = HEADER + pad, bot = H - 6;
-      const mid = W / 2;
-      return {
-        pad, top, bot, mid, left: pad, right: W - pad,
-        q: [{ x: pad, y: top, w: mid - pad, h: bot - top }, { x: mid, y: top, w: W - pad - mid, h: bot - top }]
-      };
-    }
-
-    function initDiscs() {
+    function drawDiscArena() {
       const a = discArena();
-      discState = [
-        { x: a.q[0].x + a.q[0].w * 0.5, y: a.q[0].y + a.q[0].h * 0.5, hasDisc: true, catchCd: 0, lives: LIVES, isAI: false },
-        { x: a.q[1].x + a.q[1].w * 0.5, y: a.q[1].y + a.q[1].h * 0.5, hasDisc: true, catchCd: 0, lives: LIVES, isAI: currentPlayers === 1 }
-      ];
-      discs = [];
+      ctx.fillStyle = '#001020'; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = '#00172e'; ctx.fillRect(a.q[0].x, a.q[0].y, a.q[0].w, a.q[0].h);
+      ctx.fillStyle = '#001c35'; ctx.fillRect(a.q[1].x, a.q[1].y, a.q[1].w, a.q[1].h);
+      ctx.strokeStyle = 'rgba(0,150,255,0.4)'; ctx.lineWidth = 1.5; ctx.strokeRect(a.pad, a.top, W - a.pad * 2, a.bot - a.top);
+      ctx.save(); ctx.shadowColor = '#ff0000'; ctx.shadowBlur = 18; ctx.strokeStyle = '#ff1a1a'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(a.mid, a.top); ctx.lineTo(a.mid, a.bot); ctx.stroke(); ctx.strokeStyle = 'rgba(255,80,80,0.55)'; ctx.lineWidth = 1; ctx.shadowBlur = 6; ctx.beginPath(); ctx.moveTo(a.mid, a.top); ctx.lineTo(a.mid, a.bot); ctx.stroke(); ctx.restore();
+      ctx.font = 'bold 10px Courier New'; ctx.textAlign = 'center';
+      ctx.fillStyle = 'rgba(0,160,255,0.25)'; ctx.fillText('P1', a.q[0].x + a.q[0].w / 2, a.top + 18);
+      const lbl2 = currentPlayers === 1 ? 'CPU' : 'P2'; const col2 = currentPlayers === 1 ? 'rgba(255,100,0,0.25)' : 'rgba(255,200,0,0.25)';
+      ctx.fillStyle = col2; ctx.fillText(lbl2, a.q[1].x + a.q[1].w / 2, a.top + 18);
+      const rv = 6, gap = 17;
+      for (let i = 0; i < LIVES; i++) { ctx.beginPath(); ctx.arc(a.q[0].x + 22 + i * gap, a.top + 36, rv, 0, Math.PI * 2); ctx.fillStyle = i < dPlayers[0].lives ? '#00d4ff' : 'rgba(0,120,200,0.15)'; ctx.shadowColor = '#00d4ff'; ctx.shadowBlur = i < dPlayers[0].lives ? 9 : 0; ctx.fill(); ctx.shadowBlur = 0; }
+      const vc = currentPlayers === 1 ? '#ff6a00' : '#ffe050';
+      for (let i = 0; i < LIVES; i++) { ctx.beginPath(); ctx.arc(a.q[1].x + a.q[1].w - 22 - i * gap, a.top + 36, rv, 0, Math.PI * 2); ctx.fillStyle = i < dPlayers[1].lives ? vc : 'rgba(180,60,0,0.15)'; ctx.shadowColor = vc; ctx.shadowBlur = i < dPlayers[1].lives ? 9 : 0; ctx.fill(); ctx.shadowBlur = 0; }
     }
 
-    function drawDiscBg() {
+    // ---- AERIAL PERSON ----
+    function drawPerson(dp, idx) {
+      const pc = idx === 0 ? { main: '#00d4ff', glow: '#00aaff', body: '#003550', head: '#00a8d8', suit: '#004466' }
+        : { main: currentPlayers === 1 ? '#ff6a00' : '#ffe050', glow: currentPlayers === 1 ? '#ff3300' : '#ffcc00', body: currentPlayers === 1 ? '#4a1800' : '#4a3800', head: currentPlayers === 1 ? '#cc4400' : '#ccaa00', suit: currentPlayers === 1 ? '#663300' : '#554400' };
+      ctx.save(); ctx.translate(dp.x, dp.y);
+      // orientar: P1 mira derecha, P2 mira izquierda
+      if (idx === 1) ctx.scale(-1, 1);
+      ctx.shadowColor = pc.glow; ctx.shadowBlur = 14;
+      const pr = PLR_R;
+      // Sombra proyectada
+      ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.beginPath(); ctx.ellipse(3, 4, pr * 0.9, pr * 0.65, 0, 0, Math.PI * 2); ctx.fill();
+      // PIERNAS (dos óvalos en la parte inferior)
+      const lx = pr * 0.28, ly = pr * 0.5, lw = pr * 0.28, lh = pr * 0.38;
+      ctx.fillStyle = pc.suit; ctx.strokeStyle = pc.main; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.ellipse(-lx, ly, lw, lh, 0.15, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(lx, ly, lw, lh, -0.15, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      // Línea energética piernas
+      ctx.strokeStyle = pc.main; ctx.lineWidth = 0.8; ctx.globalAlpha = 0.5;
+      ctx.beginPath(); ctx.moveTo(-lx, ly - lh * 0.6); ctx.lineTo(-lx, ly + lh * 0.6); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(lx, ly - lh * 0.6); ctx.lineTo(lx, ly + lh * 0.6); ctx.stroke();
+      ctx.globalAlpha = 1;
+      // TORSO (rectángulo redondeado)
+      const tw2 = pr * 0.58, th = pr * 0.7, ty = -pr * 0.1;
+      ctx.fillStyle = pc.body; ctx.strokeStyle = pc.main; ctx.lineWidth = 1.8;
+      ctx.beginPath(); ctx.roundRect(-tw2 / 2, ty - th / 2, tw2, th, pr * 0.15); ctx.fill(); ctx.stroke();
+      // Detalles del traje Tron sobre el torso
+      ctx.strokeStyle = pc.main; ctx.lineWidth = 1; ctx.globalAlpha = 0.55;
+      ctx.beginPath(); ctx.moveTo(-tw2 * 0.3, ty - th * 0.38); ctx.lineTo(-tw2 * 0.3, ty + th * 0.38); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(tw2 * 0.3, ty - th * 0.38); ctx.lineTo(tw2 * 0.3, ty + th * 0.38); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-tw2 * 0.45, ty); ctx.lineTo(tw2 * 0.45, ty); ctx.stroke();
+      ctx.globalAlpha = 1;
+      // BRAZOS (extendidos a los lados, el derecho sostiene el disco si lo tiene)
+      const ay2 = ty - th * 0.05, aw2 = pr * 0.85, ah2 = pr * 0.2;
+      ctx.fillStyle = pc.suit; ctx.strokeStyle = pc.main; ctx.lineWidth = 1.3;
+      // brazo izq
+      ctx.beginPath(); ctx.ellipse(-tw2 / 2 - aw2 * 0.45, ay2, aw2 * 0.48, ah2 * 0.7, 0.1, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      // brazo der (más extendido si tiene disco)
+      const armExtend = dp.hasDisc ? 1.15 : 1.0;
+      ctx.beginPath(); ctx.ellipse(tw2 / 2 + aw2 * 0.45 * armExtend, ay2, aw2 * 0.48, ah2 * 0.7, -0.1, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      // líneas energéticas brazos
+      ctx.strokeStyle = pc.main; ctx.lineWidth = 0.9; ctx.globalAlpha = 0.5;
+      ctx.beginPath(); ctx.moveTo(-tw2 / 2 - aw2 * 0.8, ay2); ctx.lineTo(-tw2 / 2, ay2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(tw2 / 2, ay2); ctx.lineTo(tw2 / 2 + aw2 * 0.8 * armExtend, ay2); ctx.stroke();
+      ctx.globalAlpha = 1;
+      // CABEZA (círculo con visor)
+      const hcy = ty - th * 0.55, hr2 = pr * 0.34;
+      ctx.fillStyle = pc.head; ctx.strokeStyle = pc.main; ctx.lineWidth = 2;
+      ctx.shadowColor = pc.glow; ctx.shadowBlur = 10;
+      ctx.beginPath(); ctx.arc(0, hcy, hr2, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      // Casco: arco superior
+      ctx.strokeStyle = pc.main; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.7;
+      ctx.beginPath(); ctx.arc(0, hcy, hr2 * 1.18, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke(); ctx.globalAlpha = 1;
+      // Visor (elipse oscura)
+      ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.beginPath(); ctx.ellipse(hr2 * 0.18, hcy, hr2 * 0.62, hr2 * 0.3, 0, 0, Math.PI * 2); ctx.fill();
+      // Brillo visor
+      ctx.fillStyle = pc.main; ctx.globalAlpha = 0.75; ctx.beginPath(); ctx.ellipse(-hr2 * 0.1, hcy - hr2 * 0.05, hr2 * 0.2, hr2 * 0.09, 0.3, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
+      // Pequeño disco en mano derecha si tiene
+      if (dp.hasDisc) {
+        const hx = tw2 / 2 + aw2 * 0.9, hy = ay2;
+        ctx.strokeStyle = pc.main; ctx.lineWidth = 2; ctx.shadowColor = pc.glow; ctx.shadowBlur = 12;
+        ctx.beginPath(); ctx.arc(hx, hy, pr * 0.2, 0, Math.PI * 2); ctx.stroke();
+        ctx.fillStyle = pc.main; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.arc(hx, hy, pr * 0.2, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
+      }
+      if (dp.isAI) {
+        ctx.save(); if (idx === 1) ctx.scale(-1, 1);
+        ctx.font = 'bold 9px Courier New'; ctx.fillStyle = pc.main; ctx.globalAlpha = 0.9; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('CPU', 0, -pr - 6); ctx.restore();
+      }
+      ctx.shadowBlur = 0; ctx.restore();
+    }
+
+    function drawDDisc() {
+      if (!dDisc) return;
+      const pc = dDisc.owner === 0 ? { main: '#00d4ff', glow: '#00aaff' } : { main: currentPlayers === 1 ? '#ff6a00' : '#ffe050', glow: currentPlayers === 1 ? '#ff3300' : '#ffcc00' };
+      if (dDisc.trail.length > 1) { ctx.save(); ctx.lineCap = 'round'; for (let i = 1; i < dDisc.trail.length; i++) { const al = (i / dDisc.trail.length) * 0.45; ctx.strokeStyle = pc.main; ctx.globalAlpha = al; ctx.lineWidth = DISC_R * 1.5 * (i / dDisc.trail.length); ctx.beginPath(); ctx.moveTo(dDisc.trail[i - 1].x, dDisc.trail[i - 1].y); ctx.lineTo(dDisc.trail[i].x, dDisc.trail[i].y); ctx.stroke(); } ctx.restore(); }
+      ctx.save(); ctx.translate(dDisc.x, dDisc.y); ctx.rotate(frameCount * 0.16);
+      ctx.shadowColor = pc.glow; ctx.shadowBlur = 24;
+      ctx.strokeStyle = pc.main; ctx.lineWidth = 3; ctx.globalAlpha = 0.95; ctx.beginPath(); ctx.arc(0, 0, DISC_R, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = pc.main; ctx.globalAlpha = 0.2; ctx.beginPath(); ctx.arc(0, 0, DISC_R, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = pc.main; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.arc(0, 0, DISC_R * 0.55, 0, Math.PI * 2); ctx.stroke();
+      ctx.lineWidth = 1.2; ctx.globalAlpha = 0.75; for (let i = 0; i < 4; i++) { ctx.beginPath(); ctx.arc(0, 0, DISC_R * 0.55, i * Math.PI / 2, (i + 0.38) * Math.PI / 2); ctx.stroke(); }
+      ctx.fillStyle = '#fff'; ctx.globalAlpha = 1; ctx.beginPath(); ctx.arc(0, 0, 2.8, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0; ctx.restore();
+      if (dDisc.returning) {
+        const ow = dPlayers[dDisc.owner]; const ang = Math.atan2(ow.y - dDisc.y, ow.x - dDisc.x);
+        ctx.save(); ctx.translate(dDisc.x, dDisc.y); ctx.rotate(ang); ctx.strokeStyle = pc.main; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.4; ctx.beginPath(); ctx.moveTo(DISC_R + 5, 0); ctx.lineTo(DISC_R + 13, 0); ctx.stroke(); ctx.beginPath(); ctx.moveTo(DISC_R + 10, -4); ctx.lineTo(DISC_R + 14, 0); ctx.lineTo(DISC_R + 10, 4); ctx.stroke(); ctx.restore();
+      }
+    }
+
+    function throwDisc(ownerIdx, dx, dy) { const dp = dPlayers[ownerIdx]; if (!dp.hasDisc || dDisc) return; const mag = Math.hypot(dx, dy); if (mag < 0.05) return; dp.hasDisc = false; dp.catchCd = CATCH_CD; dDisc = { x: dp.x, y: dp.y, vx: (dx / mag) * DISC_SPD, vy: (dy / mag) * DISC_SPD, owner: ownerIdx, trail: [{ x: dp.x, y: dp.y }], returning: false }; sfxThrow(); }
+
+    function updateDDisc() {
+      if (!dDisc) return;
       const a = discArena();
-      ctx.fillStyle = '#000810'; ctx.fillRect(0, 0, W, H);
-      // cuadrante izq (P1 azul)
-      ctx.fillStyle = 'rgba(0,30,70,0.6)'; ctx.fillRect(a.q[0].x, a.q[0].y, a.q[0].w, a.q[0].h);
-      // cuadrante der (P2 naranja o amarillo)
-      ctx.fillStyle = 'rgba(50,15,0,0.6)'; ctx.fillRect(a.q[1].x, a.q[1].y, a.q[1].w, a.q[1].h);
-      // línea divisoria
-      ctx.strokeStyle = 'rgba(0,200,255,0.55)'; ctx.lineWidth = 2; ctx.setLineDash([8, 5]);
-      ctx.beginPath(); ctx.moveTo(a.mid, a.top); ctx.lineTo(a.mid, a.bot); ctx.stroke(); ctx.setLineDash([]);
-      // bordes
-      ctx.strokeStyle = 'rgba(0,160,220,0.4)'; ctx.lineWidth = 2;
-      ctx.strokeRect(a.left, a.top, a.right - a.left, a.bot - a.top);
-      // etiquetas
-      ctx.textAlign = 'center';
-      ctx.font = "bold 10px 'Courier New'";
-      ctx.fillStyle = 'rgba(0,200,255,0.22)'; ctx.fillText('P1', a.q[0].x + a.q[0].w / 2, a.top + 18);
-      const p2lbl = currentPlayers === 1 ? 'CPU' : 'P2';
-      const p2col = currentPlayers === 1 ? 'rgba(255,106,0,0.22)' : 'rgba(255,220,0,0.22)';
-      ctx.fillStyle = p2col; ctx.fillText(p2lbl, a.q[1].x + a.q[1].w / 2, a.top + 18);
-      // vidas
-      const r = 6, gap = 17;
-      for (let i = 0; i < LIVES; i++) {
-        ctx.beginPath(); ctx.arc(a.q[0].x + 22 + i * gap, a.top + 38, r, 0, Math.PI * 2);
-        ctx.fillStyle = i < discState[0].lives ? '#00d4ff' : 'rgba(0,180,255,0.15)';
-        ctx.shadowColor = '#00d4ff'; ctx.shadowBlur = i < discState[0].lives ? 8 : 0; ctx.fill(); ctx.shadowBlur = 0;
-      }
-      const c2 = currentPlayers === 1 ? '#ff6a00' : '#ffe050';
-      for (let i = 0; i < LIVES; i++) {
-        ctx.beginPath(); ctx.arc(a.q[1].x + a.q[1].w - 22 - i * gap, a.top + 38, r, 0, Math.PI * 2);
-        ctx.fillStyle = i < discState[1].lives ? c2 : 'rgba(255,106,0,0.15)';
-        ctx.shadowColor = c2; ctx.shadowBlur = i < discState[1].lives ? 8 : 0; ctx.fill(); ctx.shadowBlur = 0;
-      }
-    }
-
-    function drawDiscCharacter(ds, idx) {
-      const pc = idx === 0 ? { main: '#00d4ff', glow: '#00aaff' } : { main: currentPlayers === 1 ? '#ff6a00' : '#ffe050', glow: currentPlayers === 1 ? '#ff4400' : '#ffcc00' };
-      ctx.save(); ctx.translate(ds.x, ds.y);
-      ctx.shadowColor = pc.glow; ctx.shadowBlur = 18;
-      // Cuerpo exterior
-      ctx.strokeStyle = pc.main; ctx.lineWidth = 2.5; ctx.globalAlpha = 0.9;
-      ctx.beginPath(); ctx.arc(0, 0, PLAYER_R, 0, Math.PI * 2); ctx.stroke();
-      // Relleno
-      ctx.fillStyle = pc.main; ctx.globalAlpha = 0.15;
-      ctx.beginPath(); ctx.arc(0, 0, PLAYER_R, 0, Math.PI * 2); ctx.fill();
-      // Aro interior
-      ctx.strokeStyle = pc.main; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.55;
-      ctx.beginPath(); ctx.arc(0, 0, PLAYER_R * 0.58, 0, Math.PI * 2); ctx.stroke();
-      // "Cabeza" Tron: triángulo orientado
-      ctx.fillStyle = pc.main; ctx.globalAlpha = 0.9;
-      ctx.beginPath(); ctx.moveTo(0, -PLAYER_R * 0.52); ctx.lineTo(PLAYER_R * 0.3, PLAYER_R * 0.28); ctx.lineTo(-PLAYER_R * 0.3, PLAYER_R * 0.28); ctx.closePath(); ctx.fill();
-      // Punto centro
-      ctx.fillStyle = '#fff'; ctx.globalAlpha = 1; ctx.beginPath(); ctx.arc(0, 0, 3, 0, Math.PI * 2); ctx.fill();
-      // Halo si tiene disco
-      if (ds.hasDisc) { ctx.strokeStyle = pc.main; ctx.lineWidth = 1; ctx.globalAlpha = 0.4; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.arc(0, 0, PLAYER_R + 8, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); }
-      // Label CPU
-      if (ds.isAI) { ctx.globalAlpha = 0.8; ctx.font = `bold 9px 'Courier New'`; ctx.fillStyle = pc.main; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('CPU', 0, -PLAYER_R - 4); }
-      ctx.globalAlpha = 1; ctx.shadowBlur = 0; ctx.restore();
-    }
-
-    function drawDiscs() {
-      discs.forEach(d => {
-        const pc = d.owner === 0 ? { main: '#00d4ff', glow: '#00aaff' } : { main: currentPlayers === 1 ? '#ff6a00' : '#ffe050', glow: currentPlayers === 1 ? '#ff4400' : '#ffcc00' };
-        // Estela
-        if (d.trail.length > 1) {
-          ctx.save(); ctx.lineCap = 'round';
-          for (let i = 1; i < d.trail.length; i++) {
-            const a = (i / d.trail.length) * 0.45;
-            const lw = DISC_R * 1.4 * (i / d.trail.length);
-            ctx.strokeStyle = pc.main; ctx.globalAlpha = a; ctx.lineWidth = lw;
-            ctx.beginPath(); ctx.moveTo(d.trail[i - 1].x, d.trail[i - 1].y); ctx.lineTo(d.trail[i].x, d.trail[i].y); ctx.stroke();
-          }
-          ctx.restore();
+      dDisc.trail.push({ x: dDisc.x, y: dDisc.y }); if (dDisc.trail.length > 16) dDisc.trail.shift();
+      dDisc.x += dDisc.vx; dDisc.y += dDisc.vy;
+      const ow = dDisc.owner, ei = 1 - ow;
+      const ownQ = a.q[ow], enemQ = a.q[ei];
+      // Is disc in enemy quadrant?
+      const inEnemy = ow === 0 ? (dDisc.x >= a.mid) : (dDisc.x <= a.mid);
+      if (inEnemy && !dDisc.returning) {
+        // bounce off enemy quad walls
+        if (dDisc.x - DISC_R <= enemQ.x) { dDisc.x = enemQ.x + DISC_R; dDisc.vx = Math.abs(dDisc.vx); sfxBounce(); }
+        if (dDisc.x + DISC_R >= enemQ.x + enemQ.w) { dDisc.x = enemQ.x + enemQ.w - DISC_R; dDisc.vx = -Math.abs(dDisc.vx); sfxBounce(); }
+        if (dDisc.y - DISC_R <= enemQ.y) { dDisc.y = enemQ.y + DISC_R; dDisc.vy = Math.abs(dDisc.vy); sfxBounce(); }
+        if (dDisc.y + DISC_R >= enemQ.y + enemQ.h) { dDisc.y = enemQ.y + enemQ.h - DISC_R; dDisc.vy = -Math.abs(dDisc.vy); sfxBounce(); }
+        // hit enemy player?
+        const enemy = dPlayers[ei];
+        if (Math.hypot(dDisc.x - enemy.x, dDisc.y - enemy.y) < DISC_R + PLR_R) {
+          enemy.lives--; sfxHit();
+          const ang = Math.atan2(dDisc.y - enemy.y, dDisc.x - enemy.x); dDisc.vx = Math.cos(ang) * DISC_SPD; dDisc.vy = Math.sin(ang) * DISC_SPD;
+          if (enemy.lives <= 0) { running = false; cancelAnimationFrame(gameLoop); setTimeout(() => showDiscResult(ow), 500); return; }
         }
-        ctx.save(); ctx.translate(d.x, d.y);
-        ctx.shadowColor = pc.glow; ctx.shadowBlur = 20;
-        // Disco exterior
-        ctx.strokeStyle = pc.main; ctx.lineWidth = 3; ctx.globalAlpha = 0.95;
-        ctx.beginPath(); ctx.arc(0, 0, DISC_R, 0, Math.PI * 2); ctx.stroke();
-        // Anillo interior giratorio (simulado con rotación por frame)
-        ctx.strokeStyle = pc.main; ctx.lineWidth = 1.2; ctx.globalAlpha = 0.5;
-        ctx.rotate(frameCount * 0.12);
-        for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(0, 0, DISC_R * 0.55, i * Math.PI * 2 / 3, (i + 0.4) * Math.PI * 2 / 3); ctx.stroke(); }
-        ctx.rotate(-frameCount * 0.12);
-        // Centro
-        ctx.fillStyle = '#fff'; ctx.globalAlpha = 0.9; ctx.beginPath(); ctx.arc(0, 0, 2.5, 0, Math.PI * 2); ctx.fill();
-        ctx.globalAlpha = 1; ctx.shadowBlur = 0; ctx.restore();
-      });
-    }
-
-    function throwDisc(ownerIdx, dx, dy) {
-      const ds = discState[ownerIdx];
-      if (!ds.hasDisc) return;
-      const mag = Math.sqrt(dx * dx + dy * dy);
-      if (mag < 0.08) return;
-      ds.hasDisc = false; ds.catchCd = 25;
-      discs.push({ x: ds.x, y: ds.y, vx: (dx / mag) * DISC_SPD, vy: (dy / mag) * DISC_SPD, owner: ownerIdx, trail: [{ x: ds.x, y: ds.y }] });
-      sfxDiscThrow();
-    }
-
-    function updateDiscs() {
-      const a = discArena();
-      for (let i = discs.length - 1; i >= 0; i--) {
-        const d = discs[i];
-        d.trail.push({ x: d.x, y: d.y });
-        if (d.trail.length > 14) d.trail.shift();
-        d.x += d.vx; d.y += d.vy;
-        // El disco rebota en el cuadrante ENEMIGO del dueño
-        const eq = a.q[1 - d.owner]; // cuadrante enemigo
-        if (d.x - DISC_R <= eq.x) { d.x = eq.x + DISC_R; d.vx = Math.abs(d.vx); sfxDiscBounce(); }
-        if (d.x + DISC_R >= eq.x + eq.w) { d.x = eq.x + eq.w - DISC_R; d.vx = -Math.abs(d.vx); sfxDiscBounce(); }
-        if (d.y - DISC_R <= eq.y) { d.y = eq.y + DISC_R; d.vy = Math.abs(d.vy); sfxDiscBounce(); }
-        if (d.y + DISC_R >= eq.y + eq.h) { d.y = eq.y + eq.h - DISC_R; d.vy = -Math.abs(d.vy); sfxDiscBounce(); }
-
-        // Si cruza de vuelta al cuadrante propio → regresa al dueño
-        const inOwnerQ = d.owner === 0 ? (d.x < a.mid) : (d.x > a.mid);
-        if (inOwnerQ) { discState[d.owner].hasDisc = true; discs.splice(i, 1); continue; }
-
-        // Golpea al enemigo
-        const eIdx = 1 - d.owner, enemy = discState[eIdx];
-        if (Math.hypot(d.x - enemy.x, d.y - enemy.y) < DISC_R + PLAYER_R) {
-          enemy.lives--; sfxCrash(); discs.splice(i, 1); discState[d.owner].hasDisc = true;
-          if (enemy.lives <= 0) { running = false; cancelAnimationFrame(gameLoop); setTimeout(() => showDiscResult(d.owner), 500); return; }
-          continue;
-        }
-        // El dueño lo atrapa en el cuadrante enemigo
-        const own = discState[d.owner];
-        if (own.catchCd <= 0 && Math.hypot(d.x - own.x, d.y - own.y) < DISC_R + PLAYER_R + 5) {
-          own.hasDisc = true; discs.splice(i, 1); sfxDiscCatch(); continue;
-        }
+        // owner catches disc in enemy quad
+        const own2 = dPlayers[ow];
+        if (own2.catchCd <= 0 && Math.hypot(dDisc.x - own2.x, dDisc.y - own2.y) < DISC_R + PLR_R) { own2.hasDisc = true; dDisc = null; sfxCatch(); return; }
       }
-    }
-
-    function moveDiscPlayer(ds, idx, mvx, mvy, aimX, aimY) {
-      if (ds.lives <= 0) return;
-      const a = discArena(); const q = a.q[idx];
-      const mag = Math.hypot(mvx, mvy);
-      if (mag > 0.05) { ds.x += mvx / Math.max(mag, 1) * PLAYER_SPD; ds.y += mvy / Math.max(mag, 1) * PLAYER_SPD; }
-      ds.x = Math.max(q.x + PLAYER_R, Math.min(q.x + q.w - PLAYER_R, ds.x));
-      ds.y = Math.max(q.y + PLAYER_R, Math.min(q.y + q.h - PLAYER_R, ds.y));
-      if (ds.catchCd > 0) ds.catchCd--;
-      if (ds.hasDisc && Math.hypot(aimX, aimY) > 0.45) throwDisc(idx, aimX, aimY);
-    }
-
-    function aiDiscStep() {
-      const ds = discState[1], enemy = discState[0], a = discArena(), q = a.q[1];
-      // Esquivar
-      let ex = 0, ey = 0;
-      discs.forEach(d => { if (d.owner === 0) { const dx = d.x - ds.x, dy = d.y - ds.y; const dist = Math.hypot(dx, dy); if (dist < 90) { ex -= dx / dist * 2.5; ey -= dy / dist * 2.5; } } });
-      // Volver al centro del cuadrante
-      const cx = q.x + q.w / 2, cy = q.y + q.h / 2;
-      let mx = (cx - ds.x) * 0.03 + ex, my = (cy - ds.y) * 0.03 + ey;
-      // Lanzar disco hacia el enemigo
-      let ax = 0, ay = 0;
-      if (ds.hasDisc && frameCount % 50 === 0) {
-        ax = (enemy.x - ds.x) + (Math.random() - 0.5) * 50;
-        ay = (enemy.y - ds.y) + (Math.random() - 0.5) * 50;
+      // disc back in own quadrant
+      const inOwn = ow === 0 ? (dDisc.x < a.mid) : (dDisc.x > a.mid);
+      if (inOwn) {
+        dDisc.returning = true;
+        // contain in own quad outer walls only
+        if (dDisc.x - DISC_R <= ownQ.x) { dDisc.x = ownQ.x + DISC_R; dDisc.vx = Math.abs(dDisc.vx); }
+        if (dDisc.x + DISC_R >= ownQ.x + ownQ.w) { dDisc.x = ownQ.x + ownQ.w - DISC_R; dDisc.vx = -Math.abs(dDisc.vx); }
+        if (dDisc.y - DISC_R <= ownQ.y) { dDisc.y = ownQ.y + DISC_R; dDisc.vy = Math.abs(dDisc.vy); }
+        if (dDisc.y + DISC_R >= ownQ.y + ownQ.h) { dDisc.y = ownQ.y + ownQ.h - DISC_R; dDisc.vy = -Math.abs(dDisc.vy); }
+        // slow down in own quad
+        dDisc.vx *= 0.982; dDisc.vy *= 0.982;
+        // owner catches in own quad
+        const own3 = dPlayers[ow];
+        if (own3.catchCd <= 0 && Math.hypot(dDisc.x - own3.x, dDisc.y - own3.y) < DISC_R + PLR_R + 10) { own3.hasDisc = true; dDisc = null; sfxCatch(); return; }
       }
-      moveDiscPlayer(ds, 1, mx, my, ax, ay);
+      dPlayers[0].catchCd = Math.max(0, dPlayers[0].catchCd - 1);
+      dPlayers[1].catchCd = Math.max(0, dPlayers[1].catchCd - 1);
+    }
+
+    function movePerson(dp, idx, mvx, mvy) { if (dp.lives <= 0) return; const a = discArena(), q = a.q[idx]; const mag = Math.hypot(mvx, mvy); if (mag > 0.05) { dp.x += (mvx / Math.max(mag, 1)) * PLR_SPD; dp.y += (mvy / Math.max(mag, 1)) * PLR_SPD; } dp.x = Math.max(q.x + PLR_R, Math.min(q.x + q.w - PLR_R, dp.x)); dp.y = Math.max(q.y + PLR_R, Math.min(q.y + q.h - PLR_R, dp.y)); if (dp.catchCd > 0) dp.catchCd--; }
+
+    function aiDiscUpdate() {
+      const dp = dPlayers[1], en = dPlayers[0], a = discArena(), q = a.q[1];
+      let mx = 0, my = 0;
+      if (dDisc && dDisc.owner === 0) { const dx = dDisc.x - dp.x, dy = dDisc.y - dp.y; const dist = Math.hypot(dx, dy); if (dist < 110) { mx -= (dx / dist) * 2.2; my -= (dy / dist) * 2.2; } }
+      if (!dp.hasDisc && dDisc && dDisc.owner === 1 && dDisc.returning) { const dx = dDisc.x - dp.x, dy = dDisc.y - dp.y; const dist = Math.hypot(dx, dy); if (dist > 8) { mx += dx / dist; my += dy / dist; } } else if (!dp.hasDisc) { const cx = q.x + q.w / 2, cy = q.y + q.h / 2; mx += (cx - dp.x) * 0.025; my += (cy - dp.y) * 0.025; }
+      movePerson(dp, 1, mx, my);
+      if (dp.hasDisc && !dDisc && frameCount % 52 === 0) { const dx = (en.x - dp.x) + (Math.random() - 0.5) * 70, dy = (en.y - dp.y) + (Math.random() - 0.5) * 70; throwDisc(1, dx, dy); }
     }
 
     function discStep() {
       frameCount++;
-      moveDiscPlayer(discState[0], 0, jsMv1.x, jsMv1.y, jsAm1.x, jsAm1.y);
-      if (discState[1].isAI) aiDiscStep();
-      else moveDiscPlayer(discState[1], 1, jsMv2.x, jsMv2.y, jsAm2.x, jsAm2.y);
-      updateDiscs();
-      drawDiscBg(); drawDiscs();
-      drawDiscCharacter(discState[0], 0); drawDiscCharacter(discState[1], 1);
-      updateHUD();
+      movePerson(dPlayers[0], 0, inp[0].mx, inp[0].my);
+      if (dPlayers[1].isAI) aiDiscUpdate(); else movePerson(dPlayers[1], 1, inp[1].mx, inp[1].my);
+      // throw from aim joystick on release (threshold crossing)
+      if (!dPlayers[0].isAI) { const al = Math.hypot(inp[0].ax, inp[0].ay); if (al > 0.55 && inp[0].pa <= 0.55 && dPlayers[0].hasDisc) throwDisc(0, inp[0].ax, inp[0].ay); inp[0].pa = al; }
+      if (!dPlayers[1].isAI) { const al = Math.hypot(inp[1].ax, inp[1].ay); if (al > 0.55 && inp[1].pa <= 0.55 && dPlayers[1].hasDisc) throwDisc(1, inp[1].ax, inp[1].ay); inp[1].pa = al; }
+      updateDDisc();
+      drawDiscArena(); drawDDisc(); drawPerson(dPlayers[0], 0); drawPerson(dPlayers[1], 1); updateHUD();
       if (running) gameLoop = requestAnimationFrame(discStep);
     }
 
     function showDiscResult(winnerIdx) {
       const wt = document.getElementById('ov-winner'), btn = document.querySelector('#menu-screen .ov-btn.primary');
-      const pc = winnerIdx === 0 ? { main: '#00d4ff' } : { main: currentPlayers === 1 ? '#ff6a00' : '#ffe050' };
+      const pc = winnerIdx === 0 ? '#00d4ff' : (currentPlayers === 1 ? '#ff6a00' : '#ffe050');
       wt.textContent = winnerIdx === 0 ? (currentPlayers === 1 ? 'YOU WIN!' : 'PLAYER 1 WINS') : (currentPlayers === 1 ? 'CPU WINS' : 'PLAYER 2 WINS');
-      wt.style.color = pc.main; wt.style.textShadow = `0 0 16px ${pc.main}`;
-      wt.style.display = 'block';
-      document.getElementById('coin-screen').style.display = 'none';
-      document.getElementById('menu-screen').style.display = 'flex';
-      if (btn) btn.textContent = 'JUGAR DE NUEVO';
-      document.getElementById('overlay').style.display = 'flex';
-      sfxWin(); stopMusic();
-      hideAllControls();
+      wt.style.color = pc; wt.style.textShadow = '0 0 16px ' + pc; wt.style.display = 'block';
+      document.getElementById('coin-screen').style.display = 'none'; document.getElementById('menu-screen').style.display = 'flex';
+      if (btn) btn.textContent = 'JUGAR DE NUEVO'; document.getElementById('overlay').style.display = 'flex';
+      sfxWin(); stopMusic(); hideAll();
     }
 
-    // ── JOYSTICK ENGINE ───────────────────────────────────────────────────────────
-    function makeJoystick(baseId, knobId, out) {
+    // ===== JOYSTICK =====
+    const jsInited = {};
+    function makeJS(baseId, knobId, outObj, fx, fy) {
+      if (jsInited[baseId]) return; jsInited[baseId] = true;
       const base = document.getElementById(baseId), knob = document.getElementById(knobId);
       if (!base || !knob) return;
       let active = false;
-      function upd(cx, cy) {
-        const r = base.getBoundingClientRect();
-        const bx = r.left + r.width / 2, by = r.top + r.height / 2;
-        let dx = cx - bx, dy = cy - by;
-        const dist = Math.hypot(dx, dy), maxR = r.width / 2 - 20;
-        if (dist > maxR) { dx = dx / dist * maxR; dy = dy / dist * maxR; }
-        knob.style.left = (r.width / 2 + dx - 19) + 'px'; knob.style.top = (r.height / 2 + dy - 19) + 'px';
-        out.x = dx / maxR; out.y = dy / maxR;
-      }
-      function rst() { knob.style.left = '31px'; knob.style.top = '31px'; out.x = 0; out.y = 0; active = false; }
+      function upd(cx, cy) { const r = base.getBoundingClientRect(); const bx = r.left + r.width / 2, by = r.top + r.height / 2; let dx = cx - bx, dy = cy - by; const dist = Math.hypot(dx, dy), maxR = r.width / 2 - 20; if (dist > maxR) { dx = dx / dist * maxR; dy = dy / dist * maxR; } knob.style.left = Math.round(r.width / 2 + dx - 18) + 'px'; knob.style.top = Math.round(r.height / 2 + dy - 18) + 'px'; outObj[fx] = dx / maxR; outObj[fy] = dy / maxR; }
+      function rst() { knob.style.left = '30px'; knob.style.top = '30px'; outObj[fx] = 0; outObj[fy] = 0; active = false; }
       base.addEventListener('touchstart', e => { e.preventDefault(); active = true; upd(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
       base.addEventListener('touchmove', e => { e.preventDefault(); if (active) upd(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
       base.addEventListener('touchend', e => { e.preventDefault(); rst(); }, { passive: false });
@@ -1063,134 +927,63 @@
       document.addEventListener('mouseup', () => { if (active) rst(); });
     }
 
-    let joysticksInited = {};
-    function initJoysticksFor(mode, players) {
-      const key = mode + players;
-      if (joysticksInited[key]) return;
-      joysticksInited[key] = true;
-      if (mode === 'discs' && players === 1) {
-        makeJoystick('jsb-move1p', 'jsk-move1p', jsMv1);
-        makeJoystick('jsb-aim1p', 'jsk-aim1p', jsAm1);
-      } else if (mode === 'discs' && players === 2) {
-        makeJoystick('jsb-p1move', 'jsk-p1move', jsMv1);
-        makeJoystick('jsb-p1aim', 'jsk-p1aim', jsAm1);
-        makeJoystick('jsb-p2move', 'jsk-p2move', jsMv2);
-        makeJoystick('jsb-p2aim', 'jsk-p2aim', jsAm2);
+    function buildDiscUI(np) {
+      const ui = document.getElementById('disc-ui'); ui.innerHTML = '';
+      if (np === 1) {
+        ui.style.justifyContent = 'space-around'; ui.style.padding = '0 8% 18px';
+        ui.innerHTML = '<div class="js-group"><div class="js-lbl">MOVER</div><div class="jbase" id="jb0m"><div class="jknob" id="jk0m"></div></div></div><div class="js-group"><div class="js-lbl og">LANZAR</div><div class="jbase og" id="jb0a"><div class="jknob og" id="jk0a"></div></div></div>';
+        ui.style.display = 'flex';
+        setTimeout(() => { makeJS('jb0m', 'jk0m', inp[0], 'mx', 'my'); makeJS('jb0a', 'jk0a', inp[0], 'ax', 'ay'); }, 60);
+      } else {
+        ui.style.justifyContent = 'space-between'; ui.style.padding = '0 2% 18px';
+        ui.innerHTML = '<div class="js-pair"><div class="js-group"><div class="js-lbl">P1 MOV</div><div class="jbase" id="jb1m"><div class="jknob" id="jk1m"></div></div></div><div class="js-group"><div class="js-lbl">P1 LNZ</div><div class="jbase" id="jb1a"><div class="jknob" id="jk1a"></div></div></div></div><div class="js-pair"><div class="js-group"><div class="js-lbl og">P2 MOV</div><div class="jbase og" id="jb2m"><div class="jknob og" id="jk2m"></div></div></div><div class="js-group"><div class="js-lbl og">P2 LNZ</div><div class="jbase og" id="jb2a"><div class="jknob og" id="jk2a"></div></div></div></div>';
+        ui.style.display = 'flex';
+        setTimeout(() => { makeJS('jb1m', 'jk1m', inp[0], 'mx', 'my'); makeJS('jb1a', 'jk1a', inp[0], 'ax', 'ay'); makeJS('jb2m', 'jk2m', inp[1], 'mx', 'my'); makeJS('jb2a', 'jk2a', inp[1], 'ax', 'ay'); }, 60);
       }
     }
 
-    function hideAllControls() {
-      document.getElementById('dpad1').style.display = 'none';
-      document.getElementById('dpad2').style.display = 'none';
-      document.getElementById('disc-controls-1p').style.display = 'none';
-      document.getElementById('disc-controls-2p').style.display = 'none';
-    }
+    function hideAll() { document.getElementById('dpad1').style.display = 'none'; document.getElementById('dpad2').style.display = 'none'; document.getElementById('disc-ui').style.display = 'none'; }
 
-    // ── RESULTADO MOTOS ───────────────────────────────────────────────────────────
-    function showResult(a1, a2) {
-      const wt = document.getElementById('ov-winner'), btn = document.querySelector('#menu-screen .ov-btn.primary');
-      if (!a1 && !a2) { wt.textContent = '— DRAW —'; wt.style.color = '#fff'; wt.style.textShadow = '0 0 10px #fff'; }
-      else if (a1) { players[0].wins++; wt.textContent = currentPlayers === 1 ? 'YOU WIN!' : 'PLAYER 1 WINS'; wt.style.color = PC[0].main; wt.style.textShadow = `0 0 16px ${PC[0].main}`; sfxWin(); }
-      else { players[1].wins++; wt.textContent = currentPlayers === 1 ? 'CPU WINS' : 'PLAYER 2 WINS'; wt.style.color = PC[1].main; wt.style.textShadow = `0 0 16px ${PC[1].main}`; if (currentPlayers === 2) sfxWin(); }
-      wt.style.display = 'block';
-      document.getElementById('coin-screen').style.display = 'none';
-      document.getElementById('menu-screen').style.display = 'flex';
-      if (btn) btn.textContent = 'JUGAR DE NUEVO';
-      document.getElementById('overlay').style.display = 'flex';
-      stopMusic(); hideAllControls();
-    }
+    function showResult(a1, a2) { const wt = document.getElementById('ov-winner'), btn = document.querySelector('#menu-screen .ov-btn.primary'); if (!a1 && !a2) { wt.textContent = 'DRAW'; wt.style.color = '#fff'; wt.style.textShadow = '0 0 10px #fff'; } else if (a1) { players[0].wins++; wt.textContent = currentPlayers === 1 ? 'YOU WIN!' : 'PLAYER 1 WINS'; wt.style.color = PC[0].main; wt.style.textShadow = '0 0 16px ' + PC[0].main; sfxWin(); } else { players[1].wins++; wt.textContent = currentPlayers === 1 ? 'CPU WINS' : 'PLAYER 2 WINS'; wt.style.color = PC[1].main; wt.style.textShadow = '0 0 16px ' + PC[1].main; if (currentPlayers === 2) sfxWin(); } wt.style.display = 'block'; document.getElementById('coin-screen').style.display = 'none'; document.getElementById('menu-screen').style.display = 'flex'; if (btn) btn.textContent = 'JUGAR DE NUEVO'; document.getElementById('overlay').style.display = 'flex'; stopMusic(); hideAll(); }
     function applyDir(p, dx, dy) { if (dx !== 0 && p.dx !== 0) return; if (dy !== 0 && p.dy !== 0) return; p.dx = dx; p.dy = dy; sfxTurn(); }
 
-    // ── START GAME ────────────────────────────────────────────────────────────────
     function startGame() {
-      getSfx();
-      currentMode = selectedMode; currentPlayers = selectedPlayers;
-      PC = currentPlayers === 1 ? PC_CPU : PC_2P;
-      document.getElementById('overlay').style.display = 'none';
-      document.getElementById('ov-winner').style.display = 'none';
-      const ml = currentMode === 'infinite' ? '∞ INFINITE' : currentMode === 'discs' ? '💿 DISCOS' : '◈ CLASSIC';
-      document.getElementById('mode-badge').textContent = ml + (currentPlayers === 1 ? '· VS CPU' : '· 2P');
-      if (gameLoop) cancelAnimationFrame(gameLoop);
-      frameCount = 0; running = true;
-      playMusic();
-      hideAllControls();
-
+      getSfx(); currentMode = selectedMode; currentPlayers = selectedPlayers; PC = currentPlayers === 1 ? PC_CPU : PC_2P;
+      document.getElementById('overlay').style.display = 'none'; document.getElementById('ov-winner').style.display = 'none';
+      const ml = currentMode === 'infinite' ? 'INF' : currentMode === 'discs' ? 'DISC' : 'CLS';
+      document.getElementById('mode-badge').textContent = ml + (currentPlayers === 1 ? ' CPU' : ' 2P');
+      if (gameLoop) cancelAnimationFrame(gameLoop); frameCount = 0; running = true; playMusic(); hideAll();
       if (currentMode === 'discs') {
-        resize();
-        // Mostrar controles según nº de jugadores
-        if (currentPlayers === 1) {
-          document.getElementById('disc-controls-1p').style.display = 'flex';
-        } else {
-          document.getElementById('disc-controls-2p').style.display = 'flex';
-        }
-        setTimeout(() => initJoysticksFor('discs', currentPlayers), 60);
-        initDiscs();
-        // Reset inputs
-        jsMv1.x = 0; jsMv1.y = 0; jsAm1.x = 0; jsAm1.y = 0;
-        jsMv2.x = 0; jsMv2.y = 0; jsAm2.x = 0; jsAm2.y = 0;
-        gameLoop = requestAnimationFrame(discStep);
+        resize(); inp[0].mx = 0; inp[0].my = 0; inp[0].ax = 0; inp[0].ay = 0; inp[0].pa = 0; inp[1].mx = 0; inp[1].my = 0; inp[1].ax = 0; inp[1].ay = 0; inp[1].pa = 0;
+        buildDiscUI(currentPlayers); initDiscMode(); gameLoop = requestAnimationFrame(discStep);
       } else {
-        document.getElementById('dpad1').style.display = 'grid';
-        document.getElementById('dpad2').style.display = currentPlayers === 1 ? 'none' : 'grid';
+        document.getElementById('dpad1').style.display = 'grid'; if (currentPlayers === 2) document.getElementById('dpad2').style.display = 'grid';
         document.getElementById('dpad2').classList.toggle('locked', currentPlayers === 1);
-        const w0 = players[0]?.wins || 0, w1 = players[1]?.wins || 0;
-        const s0 = players[0]?.score || 0, s1 = players[1]?.score || 0;
-        resize(); initGrid(); powerUps = []; engineTick = [0, 0];
-        createPlayers();
+        const w0 = players[0]?.wins || 0, w1 = players[1]?.wins || 0, s0 = players[0]?.score || 0, s1 = players[1]?.score || 0;
+        resize(); initGrid(); powerUps = []; engineTick = [0, 0]; createPlayers();
         players[0].wins = w0; players[1].wins = w1; players[0].score = s0; players[1].score = s1;
         gameLoop = requestAnimationFrame(gameStep);
       }
     }
 
-    // ── TECLADO ───────────────────────────────────────────────────────────────────
-    const KEY_STATE = {};
     document.addEventListener('keydown', e => {
-      KEY_STATE[e.key] = true;
       if (!running) return;
       if (currentMode === 'discs') {
-        // WASD = mover P1, flechas = mover P2 (o apuntar en 1P)
-        if (currentPlayers === 1) {
-          // WASD mover, flechas apuntar
-          const mv = { w: [0, -1], s: [0, 1], a: [-1, 0], d: [1, 0] };
-          if (mv[e.key]) { jsMv1.x = mv[e.key][0]; jsMv1.y = mv[e.key][1]; }
-          const am = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0] };
-          if (am[e.key]) { jsAm1.x = am[e.key][0]; jsAm1.y = am[e.key][1]; }
-          if (e.key === ' ' && discState[0]?.hasDisc) throwDisc(0, jsAm1.x || 1, jsAm1.y || 0);
-        } else {
-          const mv1 = { w: [0, -1], s: [0, 1], a: [-1, 0], d: [1, 0] };
-          const mv2 = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0] };
-          if (mv1[e.key]) { jsMv1.x = mv1[e.key][0]; jsMv1.y = mv1[e.key][1]; }
-          if (mv2[e.key]) { jsMv2.x = mv2[e.key][0]; jsMv2.y = mv2[e.key][1]; }
-          if (e.key === ' ' && discState[0]?.hasDisc) throwDisc(0, jsMv1.x || 1, jsMv1.y || 0);
-          if (e.key === 'Enter' && discState[1]?.hasDisc) throwDisc(1, jsMv2.x || -1, jsMv2.y || 0);
-        }
+        const mv1 = { w: [0, -1], s: [0, 1], a: [-1, 0], d: [1, 0] }, mv2 = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0] };
+        if (mv1[e.key]) { inp[0].mx = mv1[e.key][0]; inp[0].my = mv1[e.key][1]; }
+        if (!dPlayers[1]?.isAI && mv2[e.key]) { inp[1].mx = mv2[e.key][0]; inp[1].my = mv2[e.key][1]; }
+        if (e.key === ' ' && dPlayers[0]?.hasDisc) throwDisc(0, inp[0].mx || 1, inp[0].my || 0);
+        if (e.key === 'Enter' && !dPlayers[1]?.isAI && dPlayers[1]?.hasDisc) throwDisc(1, inp[1].mx || -1, inp[1].my || 0);
         return;
       }
       const p1 = players[0], p2 = players[1];
-      if (e.key === 'ArrowUp') applyDir(p1, 0, -1); if (e.key === 'ArrowDown') applyDir(p1, 0, 1);
-      if (e.key === 'ArrowLeft') applyDir(p1, -1, 0); if (e.key === 'ArrowRight') applyDir(p1, 1, 0);
+      if (e.key === 'ArrowUp') applyDir(p1, 0, -1); if (e.key === 'ArrowDown') applyDir(p1, 0, 1); if (e.key === 'ArrowLeft') applyDir(p1, -1, 0); if (e.key === 'ArrowRight') applyDir(p1, 1, 0);
       if (!p2?.isAI) { if (e.key === 'w') applyDir(p2, 0, -1); if (e.key === 's') applyDir(p2, 0, 1); if (e.key === 'a') applyDir(p2, -1, 0); if (e.key === 'd') applyDir(p2, 1, 0); }
     });
-    document.addEventListener('keyup', e => {
-      KEY_STATE[e.key] = false;
-      if (currentMode !== 'discs') return;
-      const mv1 = ['w', 's', 'a', 'd'], mv2 = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
-      if (mv1.includes(e.key)) { jsMv1.x = 0; jsMv1.y = 0; }
-      if (mv2.includes(e.key)) { if (currentPlayers === 1) { jsAm1.x = 0; jsAm1.y = 0; } else { jsMv2.x = 0; jsMv2.y = 0; } }
-    });
-
-    // ── DPADS MOTOS ───────────────────────────────────────────────────────────────
-    ['up', 'down', 'left', 'right'].forEach(dir => {
-      const map = { up: { dx: 0, dy: -1 }, down: { dx: 0, dy: 1 }, left: { dx: -1, dy: 0 }, right: { dx: 1, dy: 0 } };
-      [1, 2].forEach(pi => {
-        const el = document.getElementById(`p${pi}${dir}`); if (!el) return;
-        const act = () => { if (!running || currentMode === 'discs') return; const p = players[pi - 1]; if (!p || p.isAI) return; applyDir(p, map[dir].dx, map[dir].dy); el.classList.add('pressed'); setTimeout(() => el.classList.remove('pressed'), 100); };
-        el.addEventListener('touchstart', e => { e.preventDefault(); act(); }, { passive: false });
-        el.addEventListener('mousedown', act);
-      });
-    });
-
+    document.addEventListener('keyup', e => { if (currentMode !== 'discs') return; const mv1 = ['w', 's', 'a', 'd'], mv2 = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']; if (mv1.includes(e.key)) { inp[0].mx = 0; inp[0].my = 0; } if (mv2.includes(e.key)) { inp[1].mx = 0; inp[1].my = 0; } });
+    ['up', 'down', 'left', 'right'].forEach(dir => { const map = { up: { dx: 0, dy: -1 }, down: { dx: 0, dy: 1 }, left: { dx: -1, dy: 0 }, right: { dx: 1, dy: 0 } };[1, 2].forEach(pi => { const el = document.getElementById('p' + pi + dir); if (!el) return; const act = () => { if (!running || currentMode === 'discs') return; const p = players[pi - 1]; if (!p || p.isAI) return; applyDir(p, map[dir].dx, map[dir].dy); el.classList.add('pressed'); setTimeout(() => el.classList.remove('pressed'), 100); }; el.addEventListener('touchstart', e => { e.preventDefault(); act(); }, { passive: false }); el.addEventListener('mousedown', act); }); });
     drawBg();
+
   </script>
 </body>
 
